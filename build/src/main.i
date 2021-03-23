@@ -1673,21 +1673,36 @@ static inline __attribute__((always_inline)) void Wait_Bound(void)
 # 45 "..\\..\\gcc6809\\vectrex\\include\\system/vec_rum.h" 2
 # 44 "..\\..\\gcc6809\\vectrex\\include\\system/vectrex.h" 2
 # 6 "source\\main.c" 2
-# 16 "source\\main.c"
+# 1 "source\\/game.h" 1
+       
+
+
+struct game_t
+{
+ unsigned int score;
+ unsigned int lives;
+};
+
+extern struct game_t current_game;
+
+int game(void);
+
+void game_init(void);
+void game_play(void);
+void game_over(void);
+# 7 "source\\main.c" 2
+# 17 "source\\main.c"
 int main(void)
 {
 
- unsigned int error_code = 255;
+ int error_code;
 
 
  do
  {
-  Wait_Recal();
-  Intensity_5F();
-  Reset0Ref();
-  Print_Str_d(20, -80, "HELLO WORLD\x80");
+  error_code = game();
  }
- while (error_code);
+ while(error_code);
 
 
 

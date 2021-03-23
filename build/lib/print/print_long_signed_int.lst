@@ -96,7 +96,7 @@
    00BF 32 E8 19      [ 5]   96 	leas	25,s
    00C2 35 A0         [ 7]   97 	puls	y,pc
 ASxxxx Assembler V05.31  (Motorola 6809)                                Page 1
-Hexadecimal [16-Bits]                                 Tue Mar 23 19:32:39 2021
+Hexadecimal [16-Bits]                                 Tue Mar 23 20:07:04 2021
 
 Symbol Table
 
@@ -110,7 +110,7 @@ Symbol Table
     _udivhi3           **** GX  |     _umodhi3           **** GX
 
 ASxxxx Assembler V05.31  (Motorola 6809)                                Page 2
-Hexadecimal [16-Bits]                                 Tue Mar 23 19:32:39 2021
+Hexadecimal [16-Bits]                                 Tue Mar 23 20:07:04 2021
 
 Area Table
 

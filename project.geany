@@ -28,8 +28,11 @@ long_line_behaviour=1
 long_line_column=72
 
 [files]
-current_page=0
-FILE_NAME_0=0;C;0;EUTF-8;1;1;0;C%3A%5CUsers%5CManuel%5CDocuments%5CVectrex%5Cvectrex_academy_2021%5CProjects%5Cfrog_jump%5Csource%5Cmain.c;0;4
+current_page=3
+FILE_NAME_0=693;C;0;EUTF-8;1;1;0;C%3A%5CUsers%5CManuel%5CDocuments%5CVectrex%5Cvectrex_academy_2021%5CProjects%5Cfrog_jump%5Csource%5Cmain.c;0;4
+FILE_NAME_1=348;C;0;EUTF-8;1;1;0;C%3A%5CUsers%5CManuel%5CDocuments%5CVectrex%5Cvectrex_academy_2021%5CProjects%5Cfrog_jump%5Csource%5Cgame.c;0;4
+FILE_NAME_2=124;C++;0;EUTF-8;1;1;0;C%3A%5CUsers%5CManuel%5CDocuments%5CVectrex%5Cvectrex_academy_2021%5CProjects%5Cfrog_jump%5Csource%5Cgame.h;0;4
+FILE_NAME_3=462;C;0;EUTF-8;1;1;0;C%3A%5CUsers%5CManuel%5CDocuments%5CVectrex%5Cvectrex_academy_2021%5CProjects%5Cfrog_jump%5Csource%5Ccartridge.c;0;4
 
 [build-menu]
 EX_00_LB=_Execute

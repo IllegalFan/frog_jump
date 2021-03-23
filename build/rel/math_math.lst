@@ -263,7 +263,7 @@
    00FE FD                  263 	.byte	-3
    00FF FF                  264 	.byte	-1
 ASxxxx Assembler V05.31  (Motorola 6809)                                Page 1
-Hexadecimal [16-Bits]                                 Tue Mar 23 19:32:39 2021
+Hexadecimal [16-Bits]                                 Tue Mar 23 20:07:05 2021
 
 Symbol Table
 
@@ -272,7 +272,7 @@ Symbol Table
   2 _trigonometry      0000 GR
 
 ASxxxx Assembler V05.31  (Motorola 6809)                                Page 2
-Hexadecimal [16-Bits]                                 Tue Mar 23 19:32:39 2021
+Hexadecimal [16-Bits]                                 Tue Mar 23 20:07:05 2021
 
 Area Table
 

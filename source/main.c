@@ -3,6 +3,7 @@
 // ***************************************************************************
 
 #include <vectrex.h>
+#include "game.h"
 
 // ---------------------------------------------------------------------------
 // at system startup, a cold reset is performed
@@ -16,17 +17,14 @@
 int main(void)
 {
 	// local variables
-	unsigned int error_code = 255;
+	int error_code;
 			
 	// main loop
 	do
-	{
-		Wait_Recal();
-		Intensity_5F();
-		Reset0Ref();
-		Print_Str_d(20, -80, "HELLO WORLD\x80");
-	}
-	while (error_code);
+	{	
+		error_code = game();
+	} 
+	while(error_code);
 	
 	// if error_code is <= 0, then a warm reset will be performed,
 	// otherwise a cold reset will be performed,

@@ -32,7 +32,7 @@
    0031 32 69         [ 5]   32 	leas	9,s
    0033 39            [ 5]   33 	rts
 ASxxxx Assembler V05.31  (Motorola 6809)                                Page 1
-Hexadecimal [16-Bits]                                 Tue Mar 23 19:32:39 2021
+Hexadecimal [16-Bits]                                 Tue Mar 23 20:07:04 2021
 
 Symbol Table
 
@@ -43,7 +43,7 @@ Symbol Table
   2 _print_string      0000 GR
 
 ASxxxx Assembler V05.31  (Motorola 6809)                                Page 2
-Hexadecimal [16-Bits]                                 Tue Mar 23 19:32:39 2021
+Hexadecimal [16-Bits]                                 Tue Mar 23 20:07:04 2021
 
 Area Table
 
