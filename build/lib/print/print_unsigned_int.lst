@@ -1,0 +1,96 @@
+                              1 ;;; gcc for m6809 : Mar 17 2019 13:25:32
+                              2 ;;; 4.3.6 (gcc6809)
+                              3 ;;; ABI version 1
+                              4 ;;; -mabi=bx -mint8 -fomit-frame-pointer -O0
+                              5 	.module	print_unsigned_int.c
+                              6 	.area	.text
+                              7 	.globl	_print_unsigned_int
+   0000                       8 _print_unsigned_int:
+   0000 32 71         [ 5]    9 	leas	-15,s
+   0002 E7 65         [ 5]   10 	stb	5,s
+   0004 C6 80         [ 2]   11 	ldb	#-128
+   0006 E7 69         [ 5]   12 	stb	9,s
+   0008 C6 02         [ 2]   13 	ldb	#2
+   000A E7 6A         [ 5]   14 	stb	10,s
+   000C                      15 L2:
+   000C E6 6A         [ 5]   16 	ldb	10,s
+   000E E7 63         [ 5]   17 	stb	3,s
+   0010 E6 E8 12      [ 5]   18 	ldb	18,s
+   0013 4F            [ 2]   19 	clra		;zero_extendqihi: R:b -> R:d
+   0014 ED E4         [ 5]   20 	std	,s
+   0016 8E 00 0A      [ 3]   21 	ldx	#10
+   0019 34 10         [ 6]   22 	pshs	x
+   001B AE 62         [ 6]   23 	ldx	2,s
+   001D BD`00`00      [ 8]   24 	jsr	_umodhi3
+   0020 32 62         [ 5]   25 	leas	2,s
+   0022 1F 10         [ 6]   26 	tfr	x,d	;movlsbqihi: R:x -> R:b
+   0024 E7 62         [ 5]   27 	stb	2,s
+   0026 E6 62         [ 5]   28 	ldb	2,s
+   0028 CB 30         [ 2]   29 	addb	#48
+   002A E7 64         [ 5]   30 	stb	4,s
+   002C E6 63         [ 5]   31 	ldb	3,s
+   002E 4F            [ 2]   32 	clra		;zero_extendqihi: R:b -> R:d
+   002F ED E4         [ 5]   33 	std	,s
+   0031 30 66         [ 5]   34 	leax	6,s
+   0033 1E 01         [ 8]   35 	exg	d,x
+   0035 E3 E4         [ 6]   36 	addd	,s; addhi3,3
+   0037 1E 01         [ 8]   37 	exg	d,x
+   0039 E6 64         [ 5]   38 	ldb	4,s
+   003B E7 84         [ 4]   39 	stb	,x
+   003D 6A 6A         [ 7]   40 	dec	10,s
+   003F E6 E8 12      [ 5]   41 	ldb	18,s
+   0042 4F            [ 2]   42 	clra		;zero_extendqihi: R:b -> R:d
+   0043 ED E4         [ 5]   43 	std	,s
+   0045 8E 00 0A      [ 3]   44 	ldx	#10
+   0048 34 10         [ 6]   45 	pshs	x
+   004A AE 62         [ 6]   46 	ldx	2,s
+   004C BD`00`00      [ 8]   47 	jsr	_udivhi3
+   004F 32 62         [ 5]   48 	leas	2,s
+   0051 1F 10         [ 6]   49 	tfr	x,d
+   0053 E7 E8 12      [ 5]   50 	stb	18,s	;movlsbqihi: R:d -> 18,s
+   0056 E6 6A         [ 5]   51 	ldb	10,s
+   0058 C1 FF         [ 2]   52 	cmpb	#-1	;cmpqi:
+   005A 26 B0         [ 3]   53 	bne	L2
+   005C E6 65         [ 5]   54 	ldb	5,s
+   005E E7 6C         [ 5]   55 	stb	12,s
+   0060 E6 E8 11      [ 5]   56 	ldb	17,s
+   0063 E7 6B         [ 5]   57 	stb	11,s
+   0065 BD`00`00      [ 8]   58 	jsr	___Reset0Ref
+   0068 C6 7F         [ 2]   59 	ldb	#127
+   006A D7`00         [ 4]   60 	stb	*_dp_VIA_t1_cnt_lo
+   006C E6 6C         [ 5]   61 	ldb	12,s
+   006E E7 6E         [ 5]   62 	stb	14,s
+   0070 E6 6B         [ 5]   63 	ldb	11,s
+   0072 E7 6D         [ 5]   64 	stb	13,s
+   0074 E6 6E         [ 5]   65 	ldb	14,s
+   0076 E7 E2         [ 6]   66 	stb	,-s
+   0078 E6 6E         [ 5]   67 	ldb	14,s
+   007A BD`00`00      [ 8]   68 	jsr	__Moveto_d
+   007D 32 61         [ 5]   69 	leas	1,s
+   007F 30 66         [ 5]   70 	leax	6,s
+   0081 BD`00`00      [ 8]   71 	jsr	__Print_Str
+   0084 32 6F         [ 5]   72 	leas	15,s
+   0086 39            [ 5]   73 	rts
+ASxxxx Assembler V05.31  (Motorola 6809)                                Page 1
+Hexadecimal [16-Bits]                                 Tue Mar 23 19:32:39 2021
+
+Symbol Table
+
+    .__.$$$.       =   2710 L   |     .__.ABS.       =   0000 G
+    .__.CPU.       =   0000 L   |     .__.H$L.       =   0001 L
+  2 L2                 000C R   |     __Moveto_d         **** GX
+    __Print_Str        **** GX  |     ___Reset0Ref       **** GX
+    _dp_VIA_t1_cnt     **** GX  |   2 _print_unsigne     0000 GR
+    _udivhi3           **** GX  |     _umodhi3           **** GX
+
+ASxxxx Assembler V05.31  (Motorola 6809)                                Page 2
+Hexadecimal [16-Bits]                                 Tue Mar 23 19:32:39 2021
+
+Area Table
+
+[_CSEG]
+   0 _CODE            size    0   flags C080
+   2 .text            size   87   flags  100
+[_DSEG]
+   1 _DATA            size    0   flags C0C0
+
