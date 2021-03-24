@@ -14,13 +14,11 @@
    000E 50                   13 	.byte	80
    000F 10                   14 	.byte	16
    0010 9C                   15 	.byte	-100
-   0011 56 45 43 54 52 45    16 	.byte	86,69,67,84,82,69,88,32
-        58 20
-   0019 50 52 4F 4A 45 43    17 	.byte	80,82,79,74,69,67,84,-128
-        54 80
-   0021 00                   18 	.byte	0
+   0011 46 52 4F 47 20 4A    16 	.byte	70,82,79,71,32,74,85,77
+        55 4D
+   0019 50 80 00             17 	.byte	80,-128,0
 ASxxxx Assembler V05.31  (Motorola 6809)                                Page 1
-Hexadecimal [16-Bits]                                 Tue Mar 23 20:07:04 2021
+Hexadecimal [16-Bits]                                 Wed Mar 24 14:56:21 2021
 
 Symbol Table
 
@@ -29,13 +27,13 @@ Symbol Table
     _Vec_Music_1       **** GX  |   2 _game_header       0000 GR
 
 ASxxxx Assembler V05.31  (Motorola 6809)                                Page 2
-Hexadecimal [16-Bits]                                 Tue Mar 23 20:07:04 2021
+Hexadecimal [16-Bits]                                 Wed Mar 24 14:56:21 2021
 
 Area Table
 
 [_CSEG]
    0 _CODE            size    0   flags C080
-   2 .cartridge       size   22   flags  100
+   2 .cartridge       size   1C   flags  100
 [_DSEG]
    1 _DATA            size    0   flags C0C0
 

@@ -348,7 +348,7 @@
    02A9 32 E8 2A      [ 5]  343 	leas	42,s
    02AC 35 E0         [ 8]  344 	puls	y,u,pc
 ASxxxx Assembler V05.31  (Motorola 6809)                                Page 1
-Hexadecimal [16-Bits]                                 Tue Mar 23 20:07:04 2021
+Hexadecimal [16-Bits]                                 Wed Mar 24 14:56:20 2021
 
 Symbol Table
 
@@ -377,7 +377,7 @@ Symbol Table
   2 _yy2               0019 GR  |   2 _yy3               0025 GR
 
 ASxxxx Assembler V05.31  (Motorola 6809)                                Page 2
-Hexadecimal [16-Bits]                                 Tue Mar 23 20:07:04 2021
+Hexadecimal [16-Bits]                                 Wed Mar 24 14:56:20 2021
 
 Area Table
 

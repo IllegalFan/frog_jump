@@ -1,0 +1,54 @@
+#include "platforms.h"
+#include <vectrex.h>
+
+
+#undef SF
+#define SF 20
+
+const struct packet_t vectors_platform[]=
+{
+	{DRAW, { 1 * SF, 0 * SF}},
+	{DRAW, { 0 * SF, 6 * SF}},
+	{DRAW, { -1 * SF, 0 * SF}},
+	{DRAW, { 0 * SF, -6 * SF}},
+	{STOP, {0,0}},
+};
+
+struct platform_t platforms[] =
+{
+	{NONMOVING,{-20,0},(void*) &vectors_platform},
+	{NONMOVING,{-40,0},(void*) &vectors_platform},
+	{NONMOVING,{-60,0},(void*) &vectors_platform},
+	{NONMOVING,{-80,0},(void*) &vectors_platform},
+	{NONMOVING,{-100,0},(void*) &vectors_platform},
+	{NONMOVING,{0, 0},(void*) &vectors_platform},
+	{NONMOVING,{20,0},(void*) &vectors_platform},
+	{NONMOVING,{40,0},(void*) &vectors_platform},
+	{NONMOVING,{60,0},(void*) &vectors_platform},
+	{NONMOVING,{80,0},(void*) &vectors_platform},
+	{NONMOVING,{100,0},(void*) &vectors_platform},
+};
+
+void init_platforms(void)
+{
+	unsigned int size = sizeof platforms / sizeof platforms[0];
+	for(unsigned int i = 0; i < size; i++)
+	{
+		platforms[i].position.x = (int) Random();
+	}
+}
+
+void draw_platforms(void)
+{
+	unsigned int size = sizeof platforms / sizeof platforms[0];
+	for(unsigned int i = 0; i < size; i++)
+	{
+		Reset0Ref();
+		dp_VIA_t1_cnt_lo = 0x7f;
+		Moveto_d(platforms[i].position.y, platforms[i].position.x);
+		dp_VIA_t1_cnt_lo = 0x18;
+		Draw_VLp(&vectors_platform);
+	}
+}
+
+		

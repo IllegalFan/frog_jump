@@ -1,6 +1,7 @@
 #include <vectrex.h>
 #include "utils/controller.h"
 #include "game.h"
+#include "platforms.h"
 
 struct game_t current_game = 
 {
@@ -15,12 +16,11 @@ void game_init(void)
 
 void game_play(void)
 {
+	init_platforms();
 	while(current_game.lives)
 	{
 		Wait_Recal();
-		Intensity_5F();
-		Reset0Ref();
-		Print_Str_d(20, -80, "HELLO WORLD\x80");
+		draw_platforms();
 	}
 }
 
