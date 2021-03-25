@@ -7,7 +7,6 @@ enum jump_state{
 	UP_SLOW,
 	DOWN_SLOW,
 	DOWN_FAST,
-	STILL,
 };
 
 struct jump{
@@ -17,6 +16,7 @@ struct jump{
 
 struct player{
 	struct vector_t position;
+	struct packet_t* shape;
 	struct jump jmp;
 };
 
@@ -24,6 +24,6 @@ struct player{
 void init_player(void);
 void draw_player(void);
 void handle_player(void);
-//void handle_jump(void);
+void handle_jump(void);
 void move_player(void);
 	
