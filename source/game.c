@@ -2,6 +2,7 @@
 #include "utils/controller.h"
 #include "game.h"
 #include "platforms.h"
+#include "player.h"
 
 struct game_t current_game = 
 {
@@ -17,10 +18,13 @@ void game_init(void)
 void game_play(void)
 {
 	init_platforms();
+	init_player();
 	while(current_game.lives)
 	{
 		Wait_Recal();
+		Intensity_5F();
 		draw_platforms();
+		handle_player();
 	}
 }
 

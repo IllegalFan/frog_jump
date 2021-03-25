@@ -14,19 +14,19 @@ const struct packet_t vectors_platform[]=
 	{STOP, {0,0}},
 };
 
-struct platform_t platforms[] =
+struct platform_t platforms[] = 
 {
-	{NONMOVING,{-20,0},(void*) &vectors_platform},
-	{NONMOVING,{-40,0},(void*) &vectors_platform},
-	{NONMOVING,{-60,0},(void*) &vectors_platform},
-	{NONMOVING,{-80,0},(void*) &vectors_platform},
-	{NONMOVING,{-100,0},(void*) &vectors_platform},
-	{NONMOVING,{0, 0},(void*) &vectors_platform},
-	{NONMOVING,{20,0},(void*) &vectors_platform},
-	{NONMOVING,{40,0},(void*) &vectors_platform},
-	{NONMOVING,{60,0},(void*) &vectors_platform},
-	{NONMOVING,{80,0},(void*) &vectors_platform},
-	{NONMOVING,{100,0},(void*) &vectors_platform},
+	{NONMOVING,{-20,0}},
+	{NONMOVING,{-40,0}},
+	{NONMOVING,{-60,0}},
+	{NONMOVING,{-80,0}},
+	{NONMOVING,{-100,0}},
+	{NONMOVING,{0, 0}},
+	{NONMOVING,{20,0}},
+	{NONMOVING,{40,0}},
+	{NONMOVING,{60,0}},
+	{NONMOVING,{80,0}},
+	{NONMOVING,{100,0}},
 };
 
 void init_platforms(void)

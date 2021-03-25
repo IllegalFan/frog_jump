@@ -13,7 +13,6 @@ struct platform_t
 {
 	enum p_type type;
 	struct vector_t position;
-	struct packet_t* shape;
 };
 
 void init_platforms(void);
