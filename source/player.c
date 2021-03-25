@@ -1,11 +1,14 @@
 #include "player.h"
+#include "platforms.h"
 #include "utils/controller.h"
 
 #undef SF
 #define SF 10
 
+
 const struct packet_t frog_up[] =
 {
+	{MOVE,{0*SF, 3*SF}},
 	{DRAW,{4*SF, 0}},
 	{DRAW,{2*SF, -2*SF}},
 	{DRAW,{3*SF, 0}},
@@ -41,6 +44,7 @@ const struct packet_t frog_up[] =
 
 const struct packet_t frog_down[]=
 {
+	{MOVE, {-1*SF, 3*SF}},
 	{DRAW, {1*SF, 0*SF}},
 	{DRAW, {1*SF, -1*SF}},
 	{DRAW, {2*SF, 0*SF}},
@@ -76,6 +80,7 @@ const struct packet_t frog_down[]=
 
 const struct packet_t frog_between[]=
 {
+	{MOVE, {0*SF, 3*SF}},
 	{DRAW, {0*SF, -1*SF}},
 	{DRAW, {1*SF, -1*SF}},
 	{DRAW, {2*SF, 0*SF}},
@@ -106,7 +111,7 @@ const struct packet_t frog_between[]=
 	
 struct player current_player = 
 {
-	{-120,0},
+	{-100,0},
 	(void*) &frog_up,
 	{UP_FAST, 0}
 };
@@ -137,11 +142,13 @@ void handle_jump(void)
 {
 	switch(current_player.jmp.js)
 	{
+		unsigned int collision;
 		case UP_FAST:
 			if(current_player.jmp.js_counter < 20)
 			{
 				current_player.shape = (void*) &frog_up;
-				current_player.position.y += 2;
+				if(current_player.position.y > -50) move_platforms(2);
+				else current_player.position.y += 2;
 				current_player.jmp.js_counter += 1;
 			}
 			else 
@@ -154,7 +161,8 @@ void handle_jump(void)
 			if(current_player.jmp.js_counter < 10)
 			{
 				current_player.shape = (void*) &frog_between;
-				current_player.position.y += 1;
+				if(current_player.position.y > -50) move_platforms(2);
+				else current_player.position.y += 1;
 				current_player.jmp.js_counter += 1;
 			}
 			else 
@@ -164,10 +172,16 @@ void handle_jump(void)
 			}
 			break;
 		case DOWN_SLOW:
-			if(current_player.jmp.js_counter < 10)
+			collision = check_platform_collision(&current_player.position, 20, 12);
+			if(!collision && current_player.jmp.js_counter < 10)
 			{
 				current_player.position.y -= 1;
 				current_player.jmp.js_counter += 1;
+			}
+			else if(collision)
+			{
+				current_player.jmp.js = UP_FAST;
+				current_player.jmp.js_counter = 0;
 			}
 			else 
 			{
@@ -176,11 +190,16 @@ void handle_jump(void)
 			}
 			break;
 		case DOWN_FAST:
-			if(current_player.jmp.js_counter < 20)
+			collision = check_platform_collision(&current_player.position, 2, 12);
+			if(!collision)
 			{
 				current_player.shape = (void*) frog_down;
 				current_player.position.y -= 2;
-				current_player.jmp.js_counter += 1;
+			}
+			else if(collision)
+			{
+				current_player.jmp.js = UP_FAST;
+				current_player.jmp.js_counter = 0;
 			}
 			else 
 			{
@@ -193,13 +212,6 @@ void handle_jump(void)
 	}
 }
 
-void handle_player(void)
-{
-	draw_player();
-	move_player();
-	handle_jump();
-}
-
 void draw_player(void)
 {
 	Reset0Ref();
@@ -208,3 +220,10 @@ void draw_player(void)
 	dp_VIA_t1_cnt_lo = 0x18;
 	Draw_VLp((void*) current_player.shape);
 }
+void handle_player(void)
+{
+	draw_player();
+	move_player();
+	handle_jump();
+}
+

@@ -15,6 +15,8 @@ struct platform_t
 	struct vector_t position;
 };
 
+
+unsigned int check_platform_collision(struct vector_t* position, unsigned int ry, unsigned int rx);
 void init_platforms(void);
 void draw_platforms(void);
-//void move_platform(struct platform_t p, struct vector_t v);
+void move_platforms(int x);

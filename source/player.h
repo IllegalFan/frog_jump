@@ -24,6 +24,5 @@ struct player{
 void init_player(void);
 void draw_player(void);
 void handle_player(void);
-void handle_jump(void);
 void move_player(void);
 	
