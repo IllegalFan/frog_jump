@@ -18,6 +18,7 @@ struct player{
 	struct vector_t position;
 	struct packet_t* shape;
 	struct jump jmp;
+	unsigned int length;
 };
 
 

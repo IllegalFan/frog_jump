@@ -1,5 +1,6 @@
 #include "player.h"
 #include "platforms.h"
+#include "tongue.h"
 #include "utils/controller.h"
 
 #undef SF
@@ -9,7 +10,7 @@
 const struct packet_t frog_up[] =
 {
 	{MOVE,{0*SF, 3*SF}},
-	{DRAW,{4*SF, 0}},
+	{DRAW,{8*SF, 0}},
 	{DRAW,{2*SF, -2*SF}},
 	{DRAW,{3*SF, 0}},
 	{DRAW,{1*SF, 1*SF}},
@@ -33,12 +34,12 @@ const struct packet_t frog_up[] =
 	{DRAW,{-1*SF, 1*SF}},
 	{DRAW,{-3*SF, 0}},
 	{DRAW,{-2*SF, -2*SF}},
-	{DRAW,{-4*SF, 0}},
-	{DRAW,{2*SF, -2*SF}},
+	{DRAW,{-8*SF, 0}},
+	{DRAW,{6*SF, -2*SF}},
 	{DRAW,{2*SF, 0}},
 	{DRAW,{0, -2*SF}},
 	{DRAW,{-2*SF, 0}},
-	{DRAW,{-2*SF, -2*SF}},
+	{DRAW,{-6*SF, -2*SF}},
 	{STOP,{0,0}}
 };
 
@@ -54,13 +55,13 @@ const struct packet_t frog_down[]=
 	{DRAW, {1*SF, -1*SF}},
 	{DRAW, {3*SF, 0*SF}},
 	{DRAW, {2*SF, 2*SF}},
-	{DRAW, {4*SF, 0*SF}},
-	{DRAW, {-2*SF, 2*SF}},
+	{DRAW, {8*SF, 0*SF}},
+	{DRAW, {-6*SF, 2*SF}},
 	{DRAW, {-2*SF, 0*SF}},
 	{DRAW, {0*SF, 2*SF}},
 	{DRAW, {2*SF, 0*SF}},
-	{DRAW, {2*SF, 2*SF}},
-	{DRAW, {-4*SF, 0*SF}},
+	{DRAW, {6*SF, 2*SF}},
+	{DRAW, {-8*SF, 0*SF}},
 	{DRAW, {-2*SF, 2*SF}},
 	{DRAW, {-3*SF, 0*SF}},
 	{DRAW, {-1*SF, -1*SF}},
@@ -113,7 +114,8 @@ struct player current_player =
 {
 	{-100,0},
 	(void*) &frog_up,
-	{UP_FAST, 0}
+	{UP_FAST, 0},
+	32
 };
 
 void init_player(void)
@@ -124,7 +126,7 @@ void init_player(void)
 
 void move_player(void)
 {
-	const int speed = 2;
+	const int speed = 3;
 	
 	Joy_Digital();
 	
@@ -144,8 +146,10 @@ void handle_jump(void)
 	{
 		unsigned int collision;
 		case UP_FAST:
+			tongue_lash(current_player.position.y +(int)current_player.length, current_player.position.x+1);
 			if(current_player.jmp.js_counter < 20)
 			{
+				current_player.length = 40;
 				current_player.shape = (void*) &frog_up;
 				if(current_player.position.y > -50) move_platforms(2);
 				else current_player.position.y += 2;
@@ -158,8 +162,10 @@ void handle_jump(void)
 			}
 			break;
 		case UP_SLOW:
+			tongue_lash(current_player.position.y +(int)current_player.length, current_player.position.x+1);
 			if(current_player.jmp.js_counter < 10)
 			{
+				current_player.length = 16;
 				current_player.shape = (void*) &frog_between;
 				if(current_player.position.y > -50) move_platforms(2);
 				else current_player.position.y += 1;
@@ -172,9 +178,11 @@ void handle_jump(void)
 			}
 			break;
 		case DOWN_SLOW:
-			collision = check_platform_collision(&current_player.position, 20, 12);
+			tongue_lash(current_player.position.y +(int)current_player.length, current_player.position.x+1);
+			collision = check_platform_collision(&current_player.position, 2, 12);
 			if(!collision && current_player.jmp.js_counter < 10)
 			{
+				current_player.length = 16;
 				current_player.position.y -= 1;
 				current_player.jmp.js_counter += 1;
 			}
@@ -193,6 +201,7 @@ void handle_jump(void)
 			collision = check_platform_collision(&current_player.position, 2, 12);
 			if(!collision)
 			{
+				current_player.length = 32;
 				current_player.shape = (void*) frog_down;
 				current_player.position.y -= 2;
 			}

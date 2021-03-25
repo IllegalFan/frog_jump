@@ -16,17 +16,15 @@ const struct packet_t vectors_platform[]=
 
 struct platform_t platforms[] = 
 {
-	{NONMOVING,{-20,0}},
-	{NONMOVING,{-40,0}},
-	{NONMOVING,{-60,0}},
-	{NONMOVING,{-80,0}},
 	{NONMOVING,{-100,0}},
-	{NONMOVING,{0, 0}},
+	{NONMOVING,{-70,0}},
+	{NONMOVING,{-40,0}},
+	{NONMOVING,{-10,0}},
 	{NONMOVING,{20,0}},
-	{NONMOVING,{40,0}},
-	{NONMOVING,{60,0}},
+	{NONMOVING,{50, 0}},
 	{NONMOVING,{80,0}},
-	{NONMOVING,{100,0}},
+	{NONMOVING,{110,0}},
+	{NONMOVING,{127,0}},
 };
 
 void init_platforms(void)
