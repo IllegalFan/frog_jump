@@ -10,11 +10,10 @@ enum tongue_state{
 
 struct tongue{
 	enum tongue_state state;
-	struct vector_t tip_pos;
+	struct vector_t position;
 	struct packet_t* shape;
 	unsigned int cnt;
 };
 
-void tongue_lash(int y, int x);
-void draw_tongue(int y, int x);
-void tongue_cancel(void);
+void tongue_lash(struct tongue* frog_tongue, int y, int x);
+void tongue_cancel(struct tongue* frog_tongue);

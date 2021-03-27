@@ -22,9 +22,10 @@ void game_play(void)
 	while(current_game.lives)
 	{
 		Wait_Recal();
+		handle_player();
+		handle_platforms();
 		Intensity_5F();
 		draw_platforms();
-		handle_player();
 	}
 }
 

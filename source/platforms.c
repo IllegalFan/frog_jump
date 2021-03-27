@@ -16,16 +16,38 @@ const struct packet_t vectors_platform[]=
 
 struct platform_t platforms[] = 
 {
-	{NONMOVING,{-100,0}},
-	{NONMOVING,{-70,0}},
-	{NONMOVING,{-40,0}},
-	{NONMOVING,{-10,0}},
-	{NONMOVING,{20,0}},
-	{NONMOVING,{50, 0}},
-	{NONMOVING,{80,0}},
-	{NONMOVING,{110,0}},
-	{NONMOVING,{127,0}},
+	{MOVING,{-100,0},1},
+	{MOVING,{-70,0},0},
+	{NONMOVING,{-40,0},1},
+	{MOVING,{-10,0},1},
+	{MOVING,{20,0},0},
+	{NONMOVING,{50, 0},0},
+	{MOVING,{80,0},0},
+	{MOVING,{110,0},1},
+	{NONMOVING,{127,0},0},
 };
+
+void handle_platforms(void)
+{
+	unsigned int size = sizeof platforms / sizeof platforms[0];
+	for(unsigned int i = 0; i < size; i++)
+	{
+		if(platforms[i].type == MOVING)
+		{
+			if(platforms[i].dir_right)
+			{
+				if(platforms[i].position.x < 100) platforms[i].position.x+=2;
+				else platforms[i].dir_right = 0;
+			}
+			else
+			{
+				if(platforms[i].position.x > -127) platforms[i].position.x-=2;
+				else platforms[i].dir_right = 1;
+			}
+		}
+		
+	}
+}
 
 void init_platforms(void)
 {
@@ -86,7 +108,14 @@ void move_platforms(int x)
 	unsigned int size = sizeof platforms / sizeof platforms[0];
 	for(unsigned int i = 0; i < size; i++)
 	{
-		platforms[i].position.y -= x;
+		if(platforms[i].position.y > -126) platforms[i].position.y -= x;
+		else
+		{
+			if(Random() % 5) platforms[i].type = NONMOVING;
+			else platforms[i].type = MOVING;
+			platforms[i].position.y = 127;
+			platforms[i].position.x = (int) Random();
+		}
 	}
 }
 

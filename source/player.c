@@ -1,11 +1,11 @@
 #include "player.h"
 #include "platforms.h"
-#include "tongue.h"
 #include "utils/controller.h"
 
 #undef SF
 #define SF 10
 
+//Vector_Lists for different frog representations
 
 const struct packet_t frog_up[] =
 {
@@ -109,19 +109,28 @@ const struct packet_t frog_between[]=
 	{DRAW, {2*SF, 1*SF}},
 	{STOP, {0,0}}
 };
+
+//Initialisation of player instance
 	
 struct player current_player = 
 {
 	{-100,0},
 	(void*) &frog_up,
 	{UP_FAST, 0},
-	32
+	32,
+	{INACTIVE, {0,0}, 0, 0}
 };
 
 void init_player(void)
 {
 	current_player.position.x = 0;
 	current_player.jmp.js = UP_FAST;
+}
+
+void handle_input(void)
+{
+	move_player();
+	handle_tongue();
 }
 
 void move_player(void)
@@ -140,18 +149,39 @@ void move_player(void)
 	}
 }
 
+void handle_tongue()
+{
+	switch(current_player.jmp.js)
+	{
+		case UP_FAST:
+			current_player.length = 40;
+			tongue_lash(&current_player.frog_tongue, current_player.position.y +(int)current_player.length, current_player.position.x+1);
+			break;
+		case UP_SLOW:
+			current_player.length = 14;
+			tongue_lash(&current_player.frog_tongue,current_player.position.y +(int)current_player.length, current_player.position.x+1);
+			break;
+		case DOWN_SLOW:
+			tongue_lash(&current_player.frog_tongue,current_player.position.y +(int)current_player.length, current_player.position.x+1);
+			break;
+		case DOWN_FAST:
+			tongue_cancel(&current_player.frog_tongue);
+			break;
+		default:
+			break;
+	}
+}
+
 void handle_jump(void)
 {
 	switch(current_player.jmp.js)
 	{
 		unsigned int collision;
 		case UP_FAST:
-			tongue_lash(current_player.position.y +(int)current_player.length, current_player.position.x+1);
 			if(current_player.jmp.js_counter < 20)
 			{
-				current_player.length = 40;
 				current_player.shape = (void*) &frog_up;
-				if(current_player.position.y > -50) move_platforms(2);
+				if(current_player.position.y > MAX_PLAYER_HEIGHT) move_platforms(2);
 				else current_player.position.y += 2;
 				current_player.jmp.js_counter += 1;
 			}
@@ -162,12 +192,10 @@ void handle_jump(void)
 			}
 			break;
 		case UP_SLOW:
-			tongue_lash(current_player.position.y +(int)current_player.length, current_player.position.x+1);
 			if(current_player.jmp.js_counter < 10)
 			{
-				current_player.length = 16;
 				current_player.shape = (void*) &frog_between;
-				if(current_player.position.y > -50) move_platforms(2);
+				if(current_player.position.y > MAX_PLAYER_HEIGHT) move_platforms(1);
 				else current_player.position.y += 1;
 				current_player.jmp.js_counter += 1;
 			}
@@ -178,11 +206,9 @@ void handle_jump(void)
 			}
 			break;
 		case DOWN_SLOW:
-			tongue_lash(current_player.position.y +(int)current_player.length, current_player.position.x+1);
-			collision = check_platform_collision(&current_player.position, 2, 12);
+			collision = check_platform_collision(&current_player.position, 2, 14);
 			if(!collision && current_player.jmp.js_counter < 10)
 			{
-				current_player.length = 16;
 				current_player.position.y -= 1;
 				current_player.jmp.js_counter += 1;
 			}
@@ -198,17 +224,11 @@ void handle_jump(void)
 			}
 			break;
 		case DOWN_FAST:
-			collision = check_platform_collision(&current_player.position, 2, 12);
+			collision = check_platform_collision(&current_player.position, 2, 14);
 			if(!collision)
 			{
-				current_player.length = 32;
 				current_player.shape = (void*) frog_down;
 				current_player.position.y -= 2;
-			}
-			else if(collision)
-			{
-				current_player.jmp.js = UP_FAST;
-				current_player.jmp.js_counter = 0;
 			}
 			else 
 			{
@@ -228,11 +248,20 @@ void draw_player(void)
 	Moveto_d(current_player.position.y, current_player.position.x);
 	dp_VIA_t1_cnt_lo = 0x18;
 	Draw_VLp((void*) current_player.shape);
+	if(current_player.frog_tongue.state != INACTIVE)
+	{
+		Reset0Ref();
+		dp_VIA_t1_cnt_lo = 0x7f;
+		Moveto_d(current_player.frog_tongue.position.y, current_player.frog_tongue.position.x);
+		dp_VIA_t1_cnt_lo = 0x20;
+		Draw_VLp((void*) current_player.frog_tongue.shape);
+	}
 }
 void handle_player(void)
 {
-	draw_player();
-	move_player();
+	handle_input();
 	handle_jump();
+	Intensity_5F();
+	draw_player();
 }
 
