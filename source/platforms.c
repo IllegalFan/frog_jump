@@ -16,15 +16,15 @@ const struct packet_t vectors_platform[]=
 
 struct platform_t platforms[] = 
 {
-	{MOVING,{-100,0},1},
-	{MOVING,{-70,0},0},
-	{NONMOVING,{-40,0},1},
-	{MOVING,{-10,0},1},
-	{MOVING,{20,0},0},
-	{NONMOVING,{50, 0},0},
-	{MOVING,{80,0},0},
-	{MOVING,{110,0},1},
-	{NONMOVING,{127,0},0},
+	{MOVING,{-100,0},1,0},
+	{MOVING,{-70,0},0,0},
+	{NONMOVING,{-40,0},1,0},
+	{MOVING,{-10,0},1,0},
+	{MOVING,{20,0},0,0},
+	{NONMOVING,{50, 0},0,0},
+	{MOVING,{80,0},0,0},
+	{MOVING,{110,0},1,0},
+	{NONMOVING,{127,0},0,0},
 };
 
 void handle_platforms(void)
@@ -36,12 +36,12 @@ void handle_platforms(void)
 		{
 			if(platforms[i].dir_right)
 			{
-				if(platforms[i].position.x < 100) platforms[i].position.x+=2;
+				if(platforms[i].position.x < 100) platforms[i].position.x+=(int)platforms[i].speed;
 				else platforms[i].dir_right = 0;
 			}
 			else
 			{
-				if(platforms[i].position.x > -127) platforms[i].position.x-=2;
+				if(platforms[i].position.x > -127) platforms[i].position.x-=(int)platforms[i].speed;
 				else platforms[i].dir_right = 1;
 			}
 		}
@@ -111,10 +111,22 @@ void move_platforms(int x)
 		if(platforms[i].position.y > -126) platforms[i].position.y -= x;
 		else
 		{
-			if(Random() % 5) platforms[i].type = NONMOVING;
-			else platforms[i].type = MOVING;
-			platforms[i].position.y = 127;
-			platforms[i].position.x = (int) Random();
+			if(Random() % 5)
+			{
+				 platforms[i].type = NONMOVING;
+			}
+			else 
+			{
+				platforms[i].type = MOVING;
+			    platforms[i].speed = (Random() % 3) + 1;
+			}
+			platforms[i].position.y -= x;
+			int new_pos = (int) Random();
+			if(new_pos > 100)
+			{
+				new_pos &= (int)0b11011111;
+			}
+			platforms[i].position.x = new_pos;
 		}
 	}
 }

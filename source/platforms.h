@@ -14,6 +14,7 @@ struct platform_t
 	enum p_type type;
 	struct vector_t position;
 	unsigned int dir_right;
+	unsigned int speed;
 };
 
 

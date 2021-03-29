@@ -35,11 +35,15 @@ const struct packet_t frog_up[] =
 	{DRAW,{-3*SF, 0}},
 	{DRAW,{-2*SF, -2*SF}},
 	{DRAW,{-8*SF, 0}},
-	{DRAW,{6*SF, -2*SF}},
+	{DRAW,{1*SF, -1*SF}},
 	{DRAW,{2*SF, 0}},
+	{DRAW,{3*SF, -1*SF}},
+	{DRAW,{2*SF, 0*SF}},
 	{DRAW,{0, -2*SF}},
 	{DRAW,{-2*SF, 0}},
-	{DRAW,{-6*SF, -2*SF}},
+	{DRAW,{-3*SF, -1*SF}},
+	{DRAW,{-2*SF, 0}},
+	{DRAW,{-1*SF, -1*SF}},
 	{STOP,{0,0}}
 };
 
@@ -55,13 +59,17 @@ const struct packet_t frog_down[]=
 	{DRAW, {1*SF, -1*SF}},
 	{DRAW, {3*SF, 0*SF}},
 	{DRAW, {2*SF, 2*SF}},
-	{DRAW, {8*SF, 0*SF}},
-	{DRAW, {-6*SF, 2*SF}},
-	{DRAW, {-2*SF, 0*SF}},
-	{DRAW, {0*SF, 2*SF}},
-	{DRAW, {2*SF, 0*SF}},
-	{DRAW, {6*SF, 2*SF}},
-	{DRAW, {-8*SF, 0*SF}},
+	{DRAW,{8*SF, 0}},
+	{DRAW,{-1*SF, 1*SF}},
+	{DRAW,{-2*SF, 0}},
+	{DRAW,{-3*SF, 1*SF}},
+	{DRAW,{-2*SF, 0*SF}},
+	{DRAW,{0, 2*SF}},
+	{DRAW,{2*SF, 0}},
+	{DRAW,{3*SF, 1*SF}},
+	{DRAW,{2*SF, 0}},
+	{DRAW,{1*SF, 1*SF}},
+	{DRAW,{-8*SF, 0}},
 	{DRAW, {-2*SF, 2*SF}},
 	{DRAW, {-3*SF, 0*SF}},
 	{DRAW, {-1*SF, -1*SF}},
@@ -118,7 +126,7 @@ struct player current_player =
 	(void*) &frog_up,
 	{UP_FAST, 0},
 	32,
-	{INACTIVE, {0,0}, 0, 0}
+	{INACTIVE, {0,0}, 0, 0, 0}
 };
 
 void init_player(void)
@@ -254,13 +262,20 @@ void draw_player(void)
 		dp_VIA_t1_cnt_lo = 0x7f;
 		Moveto_d(current_player.frog_tongue.position.y, current_player.frog_tongue.position.x);
 		dp_VIA_t1_cnt_lo = 0x20;
+		Intensity_3F();
+		Draw_VLp((void*) current_player.frog_tongue.line);
+		Reset0Ref();
+		dp_VIA_t1_cnt_lo = 0x7f;
+		Moveto_d(current_player.frog_tongue.position.y, current_player.frog_tongue.position.x);
+		dp_VIA_t1_cnt_lo = 0x20;
+		Intensity_5F();
 		Draw_VLp((void*) current_player.frog_tongue.shape);
 	}
 }
 void handle_player(void)
 {
-	handle_input();
 	handle_jump();
+	handle_input();
 	Intensity_5F();
 	draw_player();
 }

@@ -12,6 +12,7 @@ struct tongue{
 	enum tongue_state state;
 	struct vector_t position;
 	struct packet_t* shape;
+	struct packet_t* line;
 	unsigned int cnt;
 };
 

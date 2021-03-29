@@ -14,6 +14,14 @@ const struct packet_t tongue_onethird[]=
 	{STOP, {0,0}}
 };
 
+const struct packet_t tongue_onethird_line[]=
+{
+	{MOVE, {0*SF, 5*SF}},
+	{DRAW, {2*SF, 0}},
+	{STOP, {0,0}}
+};
+
+
 const struct packet_t tongue_twothird[]=
 {
 	{MOVE, {0*SF, 4*SF}},
@@ -24,6 +32,13 @@ const struct packet_t tongue_twothird[]=
 	{STOP, {0,0}}
 };
 
+const struct packet_t tongue_twothird_line[]=
+{
+	{MOVE, {0*SF, 5*SF}},
+	{DRAW, {8*SF, 0}},
+	{STOP, {0,0}}
+};
+
 const struct packet_t tongue_full[]=
 {
 	{MOVE, {0*SF, 4*SF}},
@@ -31,6 +46,13 @@ const struct packet_t tongue_full[]=
 	{DRAW, {1*SF, 1*SF}},
 	{DRAW, {-1*SF, 1*SF}},
 	{DRAW, {-15*SF, 0*SF}},
+	{STOP, {0,0}}
+};
+
+const struct packet_t tongue_full_line[]=
+{
+	{MOVE, {0*SF, 5*SF}},
+	{DRAW, {13*SF, 0}},
 	{STOP, {0,0}}
 };
 
@@ -46,6 +68,7 @@ void tongue_lash(struct tongue* frog_tongue, int y, int x)
 			break;
 		case ONETHIRD:
 			frog_tongue->shape= (void*) tongue_onethird;
+			frog_tongue->line= (void*) tongue_onethird_line;
 			if(frog_tongue->cnt < 10)
 			{
 				frog_tongue->cnt += 1;
@@ -58,6 +81,7 @@ void tongue_lash(struct tongue* frog_tongue, int y, int x)
 			break;
 		case TWOTHIRD:
 			frog_tongue->shape = (void*) tongue_twothird;
+			frog_tongue->line= (void*) tongue_twothird_line;
 			if(frog_tongue->cnt < 10)
 			{
 				frog_tongue->cnt += 1;
@@ -69,6 +93,8 @@ void tongue_lash(struct tongue* frog_tongue, int y, int x)
 			}
 			break;
 		case FULL:
+			frog_tongue->shape = (void*) tongue_full;
+			frog_tongue->line= (void*) tongue_full_line;
 			break;		
 		default:
 			break;
