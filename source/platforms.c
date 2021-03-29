@@ -27,6 +27,26 @@ struct platform_t platforms[] =
 	{NONMOVING,{127,0},0,0},
 };
 
+
+
+
+/**Function which is used at the start of a game:
+* Randomizes the x value of every single platform.
+*/
+void init_platforms(void)
+{
+	unsigned int size = sizeof platforms / sizeof platforms[0];
+	for(unsigned int i = 0; i < size; i++)
+	{
+		platforms[i].position.x = (int) Random();
+	}
+}
+
+
+/** This function is always called after every frame.
+ *  It changes the x value of every moving platform. 
+ *  When it reaches the border of the screen it changes the direction.
+ */
 void handle_platforms(void)
 {
 	unsigned int size = sizeof platforms / sizeof platforms[0];
@@ -41,7 +61,7 @@ void handle_platforms(void)
 			}
 			else
 			{
-				if(platforms[i].position.x > -127) platforms[i].position.x-=(int)platforms[i].speed;
+				if(platforms[i].position.x > -125) platforms[i].position.x-=(int)platforms[i].speed;
 				else platforms[i].dir_right = 1;
 			}
 		}
@@ -49,15 +69,10 @@ void handle_platforms(void)
 	}
 }
 
-void init_platforms(void)
-{
-	unsigned int size = sizeof platforms / sizeof platforms[0];
-	for(unsigned int i = 0; i < size; i++)
-	{
-		platforms[i].position.x = (int) Random();
-	}
-}
 
+/**This function is always called after every frame.
+ * Function to draw every single platform on the screen.
+ */
 void draw_platforms(void)
 {
 	unsigned int size = sizeof platforms / sizeof platforms[0];
@@ -71,6 +86,9 @@ void draw_platforms(void)
 	}
 }
 
+/**This function is always called when the player is in a downward motion.
+ * Function to check if the player has collided with a platform.
+ */
 unsigned int check_platform_collision(struct vector_t* position, unsigned int ry, unsigned int rx)
 {
 	unsigned int size = sizeof platforms / sizeof platforms[0];
@@ -103,30 +121,41 @@ unsigned int check_platform_collision(struct vector_t* position, unsigned int ry
 	return 0;
 }
 
+/**This function is always called when the player reaches a new peak height.
+ * It moves the platforms down and as soon as a platform goes below -128
+ * it appears at the top again. When it appears at the top again it has
+ * a 20% chance to become a moving platform with a speed inbetween 1 and 3.
+ * Furthermore the starting x value is always a random number between -128
+ * and 96.
+ */
 void move_platforms(int x)
 {
 	unsigned int size = sizeof platforms / sizeof platforms[0];
 	for(unsigned int i = 0; i < size; i++)
 	{
-		if(platforms[i].position.y > -126) platforms[i].position.y -= x;
+		if(platforms[i].position.y > -127) platforms[i].position.y -= x;
 		else
 		{
-			if(Random() % 5)
-			{
-				 platforms[i].type = NONMOVING;
+			if(platforms[i].position.y - x >= 0)
+			{	
+				if(Random() % 5)
+				{
+					 platforms[i].type = NONMOVING;
+				}
+				else 
+				{
+					platforms[i].type = MOVING;
+					platforms[i].speed =(Random() % 3) + 1;
+				}
+				platforms[i].position.y -= x;
+				int new_pos = (int) Random();
+				if(new_pos > 100)
+				{
+					new_pos &= (int)0b11011111;
+				}
+				platforms[i].position.x = new_pos;
 			}
-			else 
-			{
-				platforms[i].type = MOVING;
-			    platforms[i].speed = (Random() % 3) + 1;
-			}
-			platforms[i].position.y -= x;
-			int new_pos = (int) Random();
-			if(new_pos > 100)
-			{
-				new_pos &= (int)0b11011111;
-			}
-			platforms[i].position.x = new_pos;
+			else platforms[i].position.y -= x;
 		}
 	}
 }

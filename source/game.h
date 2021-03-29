@@ -5,6 +5,8 @@ struct game_t
 {
 	unsigned int score;
 	unsigned int lives;
+	unsigned int option_mode;
+	unsigned int option_players;
 };
 
 extern struct game_t current_game;

@@ -1,5 +1,6 @@
 #include "player.h"
 #include "platforms.h"
+#include "game.h"
 #include "utils/controller.h"
 
 #undef SF
@@ -188,13 +189,14 @@ void handle_jump(void)
 		case UP_FAST:
 			if(current_player.jmp.js_counter < 20)
 			{
-				current_player.shape = (void*) &frog_up;
 				if(current_player.position.y > MAX_PLAYER_HEIGHT) move_platforms(2);
 				else current_player.position.y += 2;
 				current_player.jmp.js_counter += 1;
 			}
 			else 
 			{
+				current_player.shape = (void*) &frog_between;
+				current_player.position.y += 16;
 				current_player.jmp.js = UP_SLOW;
 				current_player.jmp.js_counter = 0;
 			}
@@ -202,7 +204,6 @@ void handle_jump(void)
 		case UP_SLOW:
 			if(current_player.jmp.js_counter < 10)
 			{
-				current_player.shape = (void*) &frog_between;
 				if(current_player.position.y > MAX_PLAYER_HEIGHT) move_platforms(1);
 				else current_player.position.y += 1;
 				current_player.jmp.js_counter += 1;
@@ -222,28 +223,32 @@ void handle_jump(void)
 			}
 			else if(collision)
 			{
+				current_player.shape = (void*) &frog_up;
 				current_player.jmp.js = UP_FAST;
 				current_player.jmp.js_counter = 0;
 			}
 			else 
 			{
+				current_player.shape = (void*) frog_down;
 				current_player.jmp.js = DOWN_FAST;
 				current_player.jmp.js_counter = 0;
 			}
+			if(current_player.position.y <= -127) game_over();
 			break;
 		case DOWN_FAST:
 			collision = check_platform_collision(&current_player.position, 2, 14);
 			if(!collision)
 			{
-				current_player.shape = (void*) frog_down;
 				current_player.position.y -= 2;
 			}
 			else 
 			{
+				current_player.shape = (void*) &frog_up;
 				current_player.jmp.js = UP_FAST;
 				current_player.jmp.js_counter = 0;
 			}
-			break;
+			if(current_player.position.y <= -127) game_over();	
+			break;	
 		default:
 			break;
 	}
@@ -279,4 +284,5 @@ void handle_player(void)
 	Intensity_5F();
 	draw_player();
 }
+
 
