@@ -25,6 +25,8 @@ struct player{
 	struct tongue frog_tongue;
 };
 
+extern const struct packet_t frog_up[];
+
 
 void init_player(void);
 void draw_player(void);

@@ -1,6 +1,8 @@
 #include "player.h"
 #include "platforms.h"
 #include "game.h"
+#include "tunes.h"
+#include "sound/sound.h"
 #include "utils/controller.h"
 
 #undef SF
@@ -189,7 +191,16 @@ void handle_jump(void)
 		case UP_FAST:
 			if(current_player.jmp.js_counter < 20)
 			{
-				if(current_player.position.y > MAX_PLAYER_HEIGHT) move_platforms(2);
+				if(current_player.position.y > MAX_PLAYER_HEIGHT)
+				{
+					 move_platforms(2);
+					 if(current_game.score_delay == 2)
+					 {
+						 current_game.score++;
+						 current_game.score_delay = 0;
+					 }
+					 else current_game.score_delay++;
+				}
 				else current_player.position.y += 2;
 				current_player.jmp.js_counter += 1;
 			}
@@ -223,6 +234,7 @@ void handle_jump(void)
 			}
 			else if(collision)
 			{
+				play_music(&bing);
 				current_player.shape = (void*) &frog_up;
 				current_player.jmp.js = UP_FAST;
 				current_player.jmp.js_counter = 0;
@@ -243,6 +255,7 @@ void handle_jump(void)
 			}
 			else 
 			{
+				play_music(&bing);
 				current_player.shape = (void*) &frog_up;
 				current_player.jmp.js = UP_FAST;
 				current_player.jmp.js_counter = 0;

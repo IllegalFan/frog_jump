@@ -7,6 +7,7 @@ struct game_t
 	unsigned int lives;
 	unsigned int option_mode;
 	unsigned int option_players;
+	unsigned int score_delay;
 };
 
 extern struct game_t current_game;

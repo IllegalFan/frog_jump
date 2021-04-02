@@ -5,30 +5,45 @@
 #undef SF
 #define SF 20
 
-const struct packet_t vectors_platform[]=
+const struct packet_t vectors_platform_1[]=
 {
 	{DRAW, { 1 * SF, 0 * SF}},
-	{DRAW, { 0 * SF, 127}},
+	{DRAW, { 0 * SF, 6 * SF}},
 	{DRAW, { -1 * SF, 0 * SF}},
-	{DRAW, { 0 * SF, -127}},
+	{DRAW, { 0 * SF, -6 * SF}},
+	{STOP, {0,0}},
+};
+
+const struct packet_t vectors_platform_2[]=
+{
+	{DRAW, { 1 * SF, 1 * SF}},
+	{DRAW, { 0 * SF, 6 * SF}},
+	{DRAW, { -1 * SF, -1 * SF}},
+	{DRAW, { 0 * SF, -6 * SF}},
+	{STOP, {0,0}},
+};
+
+const struct packet_t vectors_platform_3[]=
+{
+	{DRAW, { 1 * SF, -1 * SF}},
+	{DRAW, { 0 * SF, 6 * SF}},
+	{DRAW, { -1 * SF, 1 * SF}},
+	{DRAW, { 0 * SF, -6 * SF}},
 	{STOP, {0,0}},
 };
 
 struct platform_t platforms[] = 
 {
-	{MOVING,{-100,0},1,0},
-	{MOVING,{-70,0},0,0},
-	{NONMOVING,{-40,0},1,0},
-	{MOVING,{-10,0},1,0},
-	{MOVING,{20,0},0,0},
-	{NONMOVING,{50, 0},0,0},
-	{MOVING,{80,0},0,0},
-	{MOVING,{110,0},1,0},
-	{NONMOVING,{127,0},0,0},
+	{MOVING,{-100,0},0,1,3},
+	{MOVING,{-50,0},0,0,2},
+	{NONMOVING,{0,0},0,1,0},
+	{MOVING,{50,0},0,1,1},
+	{MOVING,{100,0},0,0,3},
+	/*{NONMOVING,{50, 0},0,0,0},
+	{MOVING,{80,0},0,0,2},
+	{MOVING,{110,0},0,1,1},
+	{NONMOVING,{127,0},0,0,0},*/
 };
-
-
-
 
 /**Function which is used at the start of a game:
 * Randomizes the x value of every single platform.
@@ -38,10 +53,11 @@ void init_platforms(void)
 	unsigned int size = sizeof platforms / sizeof platforms[0];
 	for(unsigned int i = 0; i < size; i++)
 	{
+		if(platforms[i].type == MOVING) platforms[i].shape = (void*) vectors_platform_2;
+		else platforms[i].shape = (void*) vectors_platform_1;
 		platforms[i].position.x = (int) Random();
 	}
 }
-
 
 /** This function is always called after every frame.
  *  It changes the x value of every moving platform. 
@@ -57,12 +73,20 @@ void handle_platforms(void)
 			if(platforms[i].dir_right)
 			{
 				if(platforms[i].position.x < 100) platforms[i].position.x+=(int)platforms[i].speed;
-				else platforms[i].dir_right = 0;
+				else 
+				{
+					platforms[i].shape = (void*) vectors_platform_3;
+					platforms[i].dir_right = 0;
+				}
 			}
 			else
 			{
 				if(platforms[i].position.x > -125) platforms[i].position.x-=(int)platforms[i].speed;
-				else platforms[i].dir_right = 1;
+				else 
+				{
+					platforms[i].shape = (void*) vectors_platform_2;
+					platforms[i].dir_right = 1;
+				}
 			}
 		}
 		
@@ -82,7 +106,7 @@ void draw_platforms(void)
 		dp_VIA_t1_cnt_lo = 0x7f;
 		Moveto_d(platforms[i].position.y, platforms[i].position.x);
 		dp_VIA_t1_cnt_lo = 0x18;
-		Draw_VLp(&vectors_platform);
+		Draw_VLp((void*) platforms[i].shape);
 	}
 }
 
@@ -147,6 +171,8 @@ void move_platforms(int x)
 					platforms[i].type = MOVING;
 					platforms[i].speed =(Random() % 3) + 1;
 				}
+				if(platforms[i].type == MOVING) platforms[i].shape = (void*) vectors_platform_2;
+				else platforms[i].shape = (void*) vectors_platform_1;
 				platforms[i].position.y -= x;
 				int new_pos = (int) Random();
 				if(new_pos > 100)

@@ -13,6 +13,7 @@ struct platform_t
 {
 	enum p_type type;
 	struct vector_t position;
+	struct packet_t* shape;
 	unsigned int dir_right;
 	unsigned int speed;
 };

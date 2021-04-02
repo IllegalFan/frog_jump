@@ -106,5 +106,6 @@ void tongue_cancel(struct tongue* frog_tongue)
 	frog_tongue->state = INACTIVE;
 	frog_tongue->cnt = 0;
 	frog_tongue->shape = (void*) tongue_onethird;
+	frog_tongue->line = (void*) tongue_onethird_line;
 }
 
