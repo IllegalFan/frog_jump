@@ -3,6 +3,7 @@
 #include "game.h"
 #include "tunes.h"
 #include "sound/sound.h"
+#include "monster.h"
 #include "utils/controller.h"
 
 
@@ -171,7 +172,7 @@ void handle_tongue()
 			tongue_lash(&current_player.frog_tongue, current_player.position.y +(int)current_player.length, current_player.position.x+1);
 			break;
 		case UP_SLOW:
-			current_player.length = 14;
+			current_player.length = 15;
 			tongue_lash(&current_player.frog_tongue,current_player.position.y +(int)current_player.length, current_player.position.x+1);
 			break;
 		case DOWN_SLOW:
@@ -195,7 +196,7 @@ void handle_jump(void)
 			{
 				if(current_player.position.y > MAX_PLAYER_HEIGHT)
 				{
-					 move_platforms(2);
+					 move_field(2);
 					 if(current_game.score_delay == 2)
 					 {
 						 current_game.score++;
@@ -217,7 +218,7 @@ void handle_jump(void)
 		case UP_SLOW:
 			if(current_player.jmp.js_counter < 10)
 			{
-				if(current_player.position.y > MAX_PLAYER_HEIGHT) move_platforms(1);
+				if(current_player.position.y > MAX_PLAYER_HEIGHT) move_field(1);
 				else current_player.position.y += 1;
 				current_player.jmp.js_counter += 1;
 			}
@@ -300,4 +301,9 @@ void handle_player(void)
 	draw_player();
 }
 
+void move_field(int distance)
+{
+	move_platforms(distance);
+	move_monsters(distance);
+}
 

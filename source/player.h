@@ -35,4 +35,5 @@ void handle_player(void);
 void handle_input(void);
 void handle_tongue(void);
 void move_player(void);
+void move_field(int distance);
 	

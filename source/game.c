@@ -5,6 +5,8 @@
 #include "game.h"
 #include "platforms.h"
 #include "player.h"
+#include "monster.h"
+
 
 struct game_t current_game = 
 {
@@ -51,6 +53,8 @@ void game_play(void)
 {
 	init_platforms();
 	init_player();
+	struct vector_t pos = {10,10};
+	generate_monster(pos);
 	while(current_game.lives)
 	{
 		DP_to_C8();
@@ -58,8 +62,10 @@ void game_play(void)
 		Wait_Recal();
 		handle_player();
 		handle_platforms();
+		handle_monsters();
 		Intensity_5F();
 		draw_platforms();
+		draw_bird();
 		Do_Sound();
 		print_long_unsigned_int(120,-100, current_game.score);
 	}
