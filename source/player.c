@@ -5,10 +5,12 @@
 #include "sound/sound.h"
 #include "utils/controller.h"
 
+
 #undef SF
 #define SF 10
 
 //Vector_Lists for different frog representations
+
 
 const struct packet_t frog_up[] =
 {
@@ -273,6 +275,7 @@ void draw_player(void)
 	dp_VIA_t1_cnt_lo = 0x7f;
 	Moveto_d(current_player.position.y, current_player.position.x);
 	dp_VIA_t1_cnt_lo = 0x18;
+	Intensity_5F();
 	Draw_VLp((void*) current_player.shape);
 	if(current_player.frog_tongue.state != INACTIVE)
 	{
@@ -294,7 +297,6 @@ void handle_player(void)
 {
 	handle_jump();
 	handle_input();
-	Intensity_5F();
 	draw_player();
 }
 

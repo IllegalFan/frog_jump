@@ -3,7 +3,9 @@
 
 struct game_t
 {
-	unsigned int score;
+	long unsigned int score;
+	unsigned int running;
+	long unsigned int highscore;
 	unsigned int lives;
 	unsigned int option_mode;
 	unsigned int option_players;
