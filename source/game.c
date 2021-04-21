@@ -14,7 +14,6 @@ struct game_t current_game =
 	.running = 1,
 	.highscore = 0,
 	.lives = 0,
-	
 	.option_mode = 0,
 	.option_players = 0,
 	.score_delay = 0,
@@ -53,7 +52,7 @@ void game_play(void)
 {
 	init_platforms();
 	init_player();
-	struct vector_t pos = {10,10};
+	struct vector_t pos = {100,0};
 	generate_monster(pos);
 	while(current_game.lives)
 	{
@@ -67,7 +66,7 @@ void game_play(void)
 		draw_platforms();
 		draw_bird();
 		Do_Sound();
-		print_long_unsigned_int(120,-100, current_game.score);
+		//print_long_unsigned_int(120,-100, current_game.score);
 	}
 }
 
@@ -88,4 +87,14 @@ int game(void)
 		}*/
 	}
 	return 1;
+}
+
+void calculate_score(void)
+{
+	if(current_game.score_delay == 2)
+	 {
+		 current_game.score++;
+		 current_game.score_delay = 0;
+	 }
+	 else current_game.score_delay++;
 }

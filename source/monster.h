@@ -19,3 +19,4 @@ void generate_monster(struct vector_t pos);
 void draw_bird(void);
 void move_monsters(int distance);
 void handle_monsters(void);
+unsigned int check_monster_collision(struct vector_t* position, unsigned int ry, unsigned int rx);

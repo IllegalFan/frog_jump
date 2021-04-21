@@ -5,6 +5,8 @@
 #include "sound/sound.h"
 #include "monster.h"
 #include "utils/controller.h"
+#include "lib/debug/monitor.h"
+#include "lib/print/print.h"
 
 
 #undef SF
@@ -137,7 +139,9 @@ struct player current_player =
 
 void init_player(void)
 {
+	current_player.position.y = -100;
 	current_player.position.x = 0;
+	current_player.jmp.js_counter = 0;
 	current_player.jmp.js = UP_FAST;
 }
 
@@ -188,21 +192,19 @@ void handle_tongue()
 
 void handle_jump(void)
 {
+	unsigned int platform_collision = check_platform_collision(&current_player.position, 2, 14);
+	struct vector_t player_pos = {current_player.position.y + 10, current_player.position.x};
+	unsigned int monster_collision = check_monster_collision(&player_pos, 10, 15);
 	switch(current_player.jmp.js)
 	{
-		unsigned int collision;
 		case UP_FAST:
+			if(monster_collision == 1)game_over();
 			if(current_player.jmp.js_counter < 20)
 			{
 				if(current_player.position.y > MAX_PLAYER_HEIGHT)
 				{
 					 move_field(2);
-					 if(current_game.score_delay == 2)
-					 {
-						 current_game.score++;
-						 current_game.score_delay = 0;
-					 }
-					 else current_game.score_delay++;
+					 calculate_score();
 				}
 				else current_player.position.y += 2;
 				current_player.jmp.js_counter += 1;
@@ -216,9 +218,14 @@ void handle_jump(void)
 			}
 			break;
 		case UP_SLOW:
+			if(monster_collision == 1 )game_over();
 			if(current_player.jmp.js_counter < 10)
 			{
-				if(current_player.position.y > MAX_PLAYER_HEIGHT) move_field(1);
+				if(current_player.position.y > MAX_PLAYER_HEIGHT)
+				{
+					 move_field(1);
+					 calculate_score();
+				}
 				else current_player.position.y += 1;
 				current_player.jmp.js_counter += 1;
 			}
@@ -229,18 +236,17 @@ void handle_jump(void)
 			}
 			break;
 		case DOWN_SLOW:
-			collision = check_platform_collision(&current_player.position, 2, 14);
-			if(!collision && current_player.jmp.js_counter < 10)
-			{
-				current_player.position.y -= 1;
-				current_player.jmp.js_counter += 1;
-			}
-			else if(collision)
+			if(platform_collision || monster_collision == 2)
 			{
 				play_music(&bing);
 				current_player.shape = (void*) &frog_up;
 				current_player.jmp.js = UP_FAST;
 				current_player.jmp.js_counter = 0;
+			}
+			else if(current_player.jmp.js_counter < 10)
+			{
+				current_player.position.y -= 1;
+				current_player.jmp.js_counter += 1;
 			}
 			else 
 			{
@@ -251,25 +257,20 @@ void handle_jump(void)
 			if(current_player.position.y <= -127) game_over();
 			break;
 		case DOWN_FAST:
-			collision = check_platform_collision(&current_player.position, 2, 14);
-			if(!collision)
-			{
-				current_player.position.y -= 2;
-			}
-			else 
+			if(platform_collision || monster_collision == 2)
 			{
 				play_music(&bing);
 				current_player.shape = (void*) &frog_up;
 				current_player.jmp.js = UP_FAST;
 				current_player.jmp.js_counter = 0;
 			}
+			else current_player.position.y -= 2;
 			if(current_player.position.y <= -127) game_over();	
 			break;	
 		default:
 			break;
 	}
 }
-
 void draw_player(void)
 {
 	Reset0Ref();
