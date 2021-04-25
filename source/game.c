@@ -23,8 +23,7 @@ void game_options(void)
 {
 	Wait_Recal();
 	Reset0Ref();
-	Print_Str_d(80 ,-80, "ITS WEDNESDAY\x80");
-	Print_Str_d(-20 , -50, "MY DUDES\x80");
+	Print_Str_d(80 ,-80, "FROG JUMP\x80");
 	Print_Str_d(-50 , -100, "HS\x80");
 	print_long_unsigned_int(-50,20, current_game.highscore);
 	Print_Str_d(-80,-100, "PRESS 1 TO START\x80");
@@ -66,7 +65,7 @@ void game_play(void)
 		draw_platforms();
 		draw_bird();
 		Do_Sound();
-		//print_long_unsigned_int(120,-100, current_game.score);
+		print_long_unsigned_int_efficiently(current_game.score);
 	}
 }
 

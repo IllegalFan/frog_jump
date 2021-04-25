@@ -3,7 +3,7 @@
 
 const struct packet_t vectors_bird_left1[]=
 {
-	{MOVE, { -5 * SF, -4 * SF}},
+	{MOVE, { -5 * SF, 4 * SF}},
 	{DRAW, { 5 * SF, -5 * SF}},
 	{DRAW, { 0 * SF, -1 * SF}},
 	{DRAW, { -1 * SF, -2 * SF}},
@@ -21,7 +21,7 @@ const struct packet_t vectors_bird_left1[]=
 
 const struct packet_t vectors_bird_left2[]=
 {
-	{MOVE, { -5 * SF, -4 * SF}},
+	{MOVE, { -5 * SF, 4 * SF}},
 	{DRAW, { 5 * SF, -5 * SF}},
 	{DRAW, { 0 * SF, -1 * SF}},
 	{DRAW, { -1 * SF, -2 * SF}},
@@ -102,7 +102,7 @@ void draw_bird(void)
 		Reset0Ref();
 		dp_VIA_t1_cnt_lo = 0x7f;
 		Moveto_d(bird.pos.y, bird.pos.x);
-		dp_VIA_t1_cnt_lo = 0x18;
+		dp_VIA_t1_cnt_lo = 0x14;
 		Draw_VLp((void*) bird.shape);
 	}
 }
@@ -176,9 +176,9 @@ unsigned int check_monster_collision(struct vector_t* position, unsigned int ry,
 		}
 		if(hits == 2)
 		{
+			bird.monster_state = DEAD;
 			if(highground == 1)
 			{
-				bird.monster_state = DEAD;
 				return 2;
 			}
 			else return 1;

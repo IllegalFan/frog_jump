@@ -15,6 +15,7 @@ void print_long_unsigned_int(int y, int x, long unsigned int z);
 void print_long_signed_int(int y, int x, long signed int z);
 void print_binary(int y, int x, unsigned int z);
 void print_long_binary(int y, int x, long unsigned int z);
+void print_long_unsigned_int_efficiently(long unsigned int z);
 
 // ***************************************************************************
 // end of file

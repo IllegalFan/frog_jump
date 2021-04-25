@@ -134,7 +134,7 @@ struct player current_player =
 	(void*) &frog_up,
 	{UP_FAST, 0},
 	32,
-	{INACTIVE, {0,0}, 0, 0, 0}
+	{INACTIVE, {0,0},0, 0, 0}
 };
 
 void init_player(void)

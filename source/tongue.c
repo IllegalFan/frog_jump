@@ -1,5 +1,6 @@
 #include "tongue.h"
 #include "utils\controller.h"
+#include "monster.h"
 
 #undef SF
 #define SF 8
@@ -69,6 +70,8 @@ void tongue_lash(struct tongue* frog_tongue, int y, int x)
 		case ONETHIRD:
 			frog_tongue->shape= (void*) tongue_onethird;
 			frog_tongue->line= (void*) tongue_onethird_line;
+			struct vector_t pos1 = {frog_tongue->position.y + 10, frog_tongue->position.x};
+			check_monster_collision(&pos1, 10, 10);
 			if(frog_tongue->cnt < 10)
 			{
 				frog_tongue->cnt += 1;
@@ -82,6 +85,8 @@ void tongue_lash(struct tongue* frog_tongue, int y, int x)
 		case TWOTHIRD:
 			frog_tongue->shape = (void*) tongue_twothird;
 			frog_tongue->line= (void*) tongue_twothird_line;
+			struct vector_t pos2 = {frog_tongue->position.y + 20, frog_tongue->position.x};
+			check_monster_collision(&pos2, 10, 10);
 			if(frog_tongue->cnt < 10)
 			{
 				frog_tongue->cnt += 1;
@@ -95,6 +100,8 @@ void tongue_lash(struct tongue* frog_tongue, int y, int x)
 		case FULL:
 			frog_tongue->shape = (void*) tongue_full;
 			frog_tongue->line= (void*) tongue_full_line;
+			struct vector_t pos3 = {frog_tongue->position.y + 30, frog_tongue->position.x};
+			check_monster_collision(&pos3, 10, 10);
 			break;		
 		default:
 			break;
