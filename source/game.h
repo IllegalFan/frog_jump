@@ -4,11 +4,10 @@
 struct game_t
 {
 	long unsigned int score;
+	unsigned int difficulty;
 	unsigned int running;
 	long unsigned int highscore;
-	unsigned int lives;
-	unsigned int option_mode;
-	unsigned int option_players;
+	unsigned int alive;
 	unsigned int score_delay;
 };
 
@@ -20,3 +19,4 @@ void game_init(void);
 void game_play(void);
 void game_over(void);
 void calculate_score(void);
+void draw_difficulty(void);

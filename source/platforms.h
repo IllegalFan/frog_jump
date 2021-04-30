@@ -24,3 +24,4 @@ void handle_platforms(void);
 void init_platforms(void);
 void draw_platforms(void);
 void move_platforms(int x);
+void print_nonmovingprob(void);

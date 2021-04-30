@@ -36,4 +36,5 @@ void handle_input(void);
 void handle_tongue(void);
 void move_player(void);
 void move_field(int distance);
+void increase_diff(void);
 	

@@ -1,4 +1,5 @@
 #include "platforms.h"
+#include "lib/print/print.h"
 #include <vectrex.h>
 
 
@@ -45,16 +46,21 @@ struct platform_t platforms[] =
 	{NONMOVING,{127,0},0,0,0},*/
 };
 
+unsigned int nonmoving_prob = 5;
+unsigned int speed_prob = 1;
+
 /**Function which is used at the start of a game:
 * Randomizes the x value of every single platform.
 */
 void init_platforms(void)
 {
+	nonmoving_prob = 10;
+	speed_prob = 1;
 	unsigned int size = sizeof platforms / sizeof platforms[0];
 	for(unsigned int i = 0; i < size; i++)
 	{
-		if(platforms[i].type == MOVING) platforms[i].shape = (void*) vectors_platform_2;
-		else platforms[i].shape = (void*) vectors_platform_1;
+		platforms[i].type = NONMOVING;
+		platforms[i].shape = (void*) vectors_platform_1;
 		platforms[i].position.x = (int) Random();
 	}
 }
@@ -162,14 +168,14 @@ void move_platforms(int x)
 		{
 			if(platforms[i].position.y - x >= 0)
 			{	
-				if(Random() % 5)
+				if(Random() % nonmoving_prob != 1)
 				{
 					 platforms[i].type = NONMOVING;
 				}
 				else 
 				{
 					platforms[i].type = MOVING;
-					platforms[i].speed =(Random() % 3) + 1;
+					platforms[i].speed =speed_prob;
 				}
 				if(platforms[i].type == MOVING) platforms[i].shape = (void*) vectors_platform_2;
 				else platforms[i].shape = (void*) vectors_platform_1;
@@ -184,6 +190,17 @@ void move_platforms(int x)
 			else platforms[i].position.y -= x;
 		}
 	}
+}
+
+void increase_diff(void)
+{
+	nonmoving_prob--;
+	speed_prob++;
+}
+
+void print_nonmovingprob(void)
+{
+	print_unsigned_int(100,50, nonmoving_prob);
 }
 
 		

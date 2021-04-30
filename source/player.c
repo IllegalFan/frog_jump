@@ -134,7 +134,7 @@ struct player current_player =
 	(void*) &frog_up,
 	{UP_FAST, 0},
 	32,
-	{INACTIVE, {0,0},0, 0, 0}
+	{INACTIVE, {0,0},{0, 0}, 0}
 };
 
 void init_player(void)
@@ -286,13 +286,13 @@ void draw_player(void)
 		Moveto_d(current_player.frog_tongue.position.y, current_player.frog_tongue.position.x);
 		dp_VIA_t1_cnt_lo = 0x20;
 		Intensity_3F();
-		Draw_VLp((void*) current_player.frog_tongue.line);
+		Draw_VLp((void*) current_player.frog_tongue.shape[1]);
 		Reset0Ref();
 		dp_VIA_t1_cnt_lo = 0x7f;
 		Moveto_d(current_player.frog_tongue.position.y, current_player.frog_tongue.position.x);
 		dp_VIA_t1_cnt_lo = 0x20;
 		Intensity_5F();
-		Draw_VLp((void*) current_player.frog_tongue.shape);
+		Draw_VLp((void*) current_player.frog_tongue.shape[0]);
 	}
 }
 void handle_player(void)

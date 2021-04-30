@@ -11,8 +11,7 @@ enum tongue_state{
 struct tongue{
 	enum tongue_state state;
 	struct vector_t position;
-	struct packet_t* shape;
-	struct packet_t* line;
+	struct packet_t (*shape [2])[];
 	unsigned int cnt;
 };
 
