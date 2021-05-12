@@ -16,10 +16,11 @@ struct platform_t
 	struct packet_t* shape;
 	unsigned int dir_right;
 	unsigned int speed;
+	unsigned int scale_factor;
 };
 
 
-unsigned int check_platform_collision(struct vector_t* position, unsigned int ry, unsigned int rx);
+unsigned int check_platform_collision(struct vector_t* position);
 void handle_platforms(void);
 void init_platforms(void);
 void draw_platforms(void);

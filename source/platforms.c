@@ -4,42 +4,45 @@
 
 
 #undef SF
-#define SF 20
+#define SF 15
 
 const struct packet_t vectors_platform_1[]=
 {
+	{MOVE, { 0 * SF, -4* SF}},
 	{DRAW, { 1 * SF, 0 * SF}},
-	{DRAW, { 0 * SF, 6 * SF}},
+	{DRAW, { 0 * SF, 8 * SF}},
 	{DRAW, { -1 * SF, 0 * SF}},
-	{DRAW, { 0 * SF, -6 * SF}},
+	{DRAW, { 0 * SF, -8 * SF}},
 	{STOP, {0,0}},
 };
 
 const struct packet_t vectors_platform_2[]=
 {
+	{MOVE, { 0 * SF, -4 * SF}},
 	{DRAW, { 1 * SF, 1 * SF}},
-	{DRAW, { 0 * SF, 6 * SF}},
+	{DRAW, { 0 * SF, 8 * SF}},
 	{DRAW, { -1 * SF, -1 * SF}},
-	{DRAW, { 0 * SF, -6 * SF}},
+	{DRAW, { 0 * SF, -8 * SF}},
 	{STOP, {0,0}},
 };
 
 const struct packet_t vectors_platform_3[]=
 {
+	{MOVE, { 0 * SF, -4 * SF}},
 	{DRAW, { 1 * SF, -1 * SF}},
-	{DRAW, { 0 * SF, 6 * SF}},
+	{DRAW, { 0 * SF, 8 * SF}},
 	{DRAW, { -1 * SF, 1 * SF}},
-	{DRAW, { 0 * SF, -6 * SF}},
+	{DRAW, { 0 * SF, -8 * SF}},
 	{STOP, {0,0}},
 };
 
 struct platform_t platforms[] = 
 {
-	{MOVING,{-100,0},0,1,3},
-	{MOVING,{-50,0},0,0,2},
-	{NONMOVING,{0,0},0,1,0},
-	{NONMOVING,{50,0},0,1,1},
-	{NONMOVING,{100,0},0,0,3},
+	{0,{-100,0},0,0,0,0x30},
+	{0,{-50,0},0,0,0,0x30},
+	{0,{0,0},0,0,0,0x30},
+	{0,{50,0},0,0,0,0x30},
+	{0,{100,0},0,0,0,0x30},
 	/*{NONMOVING,{50, 0},0,0,0},
 	{MOVING,{80,0},0,0,2},
 	{MOVING,{110,0},0,1,1},
@@ -47,7 +50,8 @@ struct platform_t platforms[] =
 };
 
 unsigned int nonmoving_prob = 5;
-unsigned int speed_prob = 1;
+unsigned int speed = 1;
+unsigned int current_scale_factor = 0x10;
 
 /**Function which is used at the start of a game:
 * Randomizes the x value of every single platform.
@@ -55,13 +59,26 @@ unsigned int speed_prob = 1;
 void init_platforms(void)
 {
 	nonmoving_prob = 10;
-	speed_prob = 1;
+	speed = 1;
+	current_scale_factor = 0x30;
 	unsigned int size = sizeof platforms / sizeof platforms[0];
-	for(unsigned int i = 0; i < size; i++)
+	platforms[0].shape = (void*) vectors_platform_1;
+	struct vector_t pos = {-100,0};
+	platforms[0].position = pos;
+	platforms[0].type = NONMOVING;
+	platforms[0].scale_factor = 0x30;
+	for(unsigned int i = 1; i < size; i++)
 	{
 		platforms[i].type = NONMOVING;
 		platforms[i].shape = (void*) vectors_platform_1;
-		platforms[i].position.x = (int) Random();
+		platforms[i].scale_factor = current_scale_factor;
+		int new_pos = (int) Random();
+		if(new_pos > 100)
+		{
+			new_pos &= (int)0b11011111;
+		}
+		platforms[i].position.x = new_pos;
+		platforms[i].position.y = 50 * (int)i - 100;
 	}
 }
 
@@ -78,7 +95,7 @@ void handle_platforms(void)
 		{
 			if(platforms[i].dir_right)
 			{
-				if(platforms[i].position.x < 100) platforms[i].position.x+=(int)platforms[i].speed;
+				if(platforms[i].position.x < 127 - (int)(platforms[i].scale_factor/2)) platforms[i].position.x+=(int)platforms[i].speed;
 				else 
 				{
 					platforms[i].shape = (void*) vectors_platform_3;
@@ -87,7 +104,7 @@ void handle_platforms(void)
 			}
 			else
 			{
-				if(platforms[i].position.x > -125) platforms[i].position.x-=(int)platforms[i].speed;
+				if(platforms[i].position.x > -128 + (int)(platforms[i].scale_factor / 2)) platforms[i].position.x-=(int)platforms[i].speed;
 				else 
 				{
 					platforms[i].shape = (void*) vectors_platform_2;
@@ -111,7 +128,7 @@ void draw_platforms(void)
 		Reset0Ref();
 		dp_VIA_t1_cnt_lo = 0x7f;
 		Moveto_d(platforms[i].position.y, platforms[i].position.x);
-		dp_VIA_t1_cnt_lo = 0x18;
+		dp_VIA_t1_cnt_lo = platforms[i].scale_factor;
 		Draw_VLp((void*) platforms[i].shape);
 	}
 }
@@ -119,7 +136,7 @@ void draw_platforms(void)
 /**This function is always called when the player is in a downward motion.
  * Function to check if the player has collided with a platform.
  */
-unsigned int check_platform_collision(struct vector_t* position, unsigned int ry, unsigned int rx)
+unsigned int check_platform_collision(struct vector_t* position)
 {
 	unsigned int size = sizeof platforms / sizeof platforms[0];
 	unsigned int hits = 0;
@@ -127,6 +144,8 @@ unsigned int check_platform_collision(struct vector_t* position, unsigned int ry
 	int x0 = position->x;
 	for(unsigned int i = 0; i < size; i++)
 	{
+		unsigned int ry = platforms[i].scale_factor / 8;
+		unsigned int rx = platforms[i].scale_factor / 2;
 		int y1 = platforms[i].position.y;
 		int x1 = platforms[i].position.x;
 		if (y0 < y1)
@@ -168,17 +187,19 @@ void move_platforms(int x)
 		{
 			if(platforms[i].position.y - x >= 0)
 			{	
-				if(Random() % nonmoving_prob != 1)
+				if(Random() >= 64)
 				{
 					 platforms[i].type = NONMOVING;
+					 platforms[i].shape = (void*) vectors_platform_1;
 				}
 				else 
 				{
 					platforms[i].type = MOVING;
-					platforms[i].speed =speed_prob;
+					platforms[i].speed =speed;
+					if(platforms[i].dir_right == 1) platforms[i].shape = (void*) vectors_platform_2;
+					else platforms[i].shape = (void*) vectors_platform_3;
 				}
-				if(platforms[i].type == MOVING) platforms[i].shape = (void*) vectors_platform_2;
-				else platforms[i].shape = (void*) vectors_platform_1;
+				platforms[i].scale_factor = current_scale_factor;
 				platforms[i].position.y -= x;
 				int new_pos = (int) Random();
 				if(new_pos > 100)
@@ -194,8 +215,8 @@ void move_platforms(int x)
 
 void increase_diff(void)
 {
-	nonmoving_prob--;
-	speed_prob++;
+	speed++;
+	current_scale_factor -= 8;
 }
 
 void print_nonmovingprob(void)

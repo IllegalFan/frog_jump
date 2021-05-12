@@ -17,7 +17,7 @@
 
 const struct packet_t frog_up[] =
 {
-	{MOVE,{0*SF, 3*SF}},
+	{MOVE,{0*SF, -3*SF}},
 	{DRAW,{8*SF, 0}},
 	{DRAW,{2*SF, -2*SF}},
 	{DRAW,{3*SF, 0}},
@@ -57,7 +57,7 @@ const struct packet_t frog_up[] =
 
 const struct packet_t frog_down[]=
 {
-	{MOVE, {-1*SF, 3*SF}},
+	{MOVE, {0 *SF, -3*SF}},
 	{DRAW, {1*SF, 0*SF}},
 	{DRAW, {1*SF, -1*SF}},
 	{DRAW, {2*SF, 0*SF}},
@@ -97,7 +97,7 @@ const struct packet_t frog_down[]=
 
 const struct packet_t frog_between[]=
 {
-	{MOVE, {0*SF, 3*SF}},
+	{MOVE, {0*SF, -3*SF}},
 	{DRAW, {0*SF, -1*SF}},
 	{DRAW, {1*SF, -1*SF}},
 	{DRAW, {2*SF, 0*SF}},
@@ -173,14 +173,14 @@ void handle_tongue()
 	{
 		case UP_FAST:
 			current_player.length = 40;
-			tongue_lash(&current_player.frog_tongue, current_player.position.y +(int)current_player.length, current_player.position.x+1);
+			tongue_lash(&current_player.frog_tongue, current_player.position.y +(int)current_player.length, current_player.position.x);
 			break;
 		case UP_SLOW:
 			current_player.length = 15;
-			tongue_lash(&current_player.frog_tongue,current_player.position.y +(int)current_player.length, current_player.position.x+1);
+			tongue_lash(&current_player.frog_tongue,current_player.position.y +(int)current_player.length, current_player.position.x);
 			break;
 		case DOWN_SLOW:
-			tongue_lash(&current_player.frog_tongue,current_player.position.y +(int)current_player.length, current_player.position.x+1);
+			tongue_lash(&current_player.frog_tongue,current_player.position.y +(int)current_player.length, current_player.position.x);
 			break;
 		case DOWN_FAST:
 			tongue_cancel(&current_player.frog_tongue);
@@ -192,7 +192,7 @@ void handle_tongue()
 
 void handle_jump(void)
 {
-	unsigned int platform_collision = check_platform_collision(&current_player.position, 2, 14);
+	unsigned int platform_collision = check_platform_collision(&current_player.position);
 	struct vector_t player_pos = {current_player.position.y + 10, current_player.position.x};
 	unsigned int monster_collision = check_monster_collision(&player_pos, 10, 15);
 	switch(current_player.jmp.js)

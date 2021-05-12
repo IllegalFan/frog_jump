@@ -7,7 +7,7 @@
 
 const struct packet_t tongue_onethird[]=
 {
-	{MOVE, {0*SF, 4*SF}},
+	{DRAW, {0* SF, -1 * SF}}, 
 	{DRAW, {5*SF, 0*SF}},
 	{DRAW, {1*SF, 1*SF}},
 	{DRAW, {-1*SF, 1*SF}},
@@ -17,7 +17,6 @@ const struct packet_t tongue_onethird[]=
 
 const struct packet_t tongue_onethird_line[]=
 {
-	{MOVE, {0*SF, 5*SF}},
 	{DRAW, {2*SF, 0}},
 	{STOP, {0,0}}
 };
@@ -25,7 +24,7 @@ const struct packet_t tongue_onethird_line[]=
 
 const struct packet_t tongue_twothird[]=
 {
-	{MOVE, {0*SF, 4*SF}},
+	{DRAW, {0* SF, -1 * SF}},
 	{DRAW, {10*SF, 0*SF}},
 	{DRAW, {1*SF, 1*SF}},
 	{DRAW, {-1*SF, 1*SF}},
@@ -35,14 +34,13 @@ const struct packet_t tongue_twothird[]=
 
 const struct packet_t tongue_twothird_line[]=
 {
-	{MOVE, {0*SF, 5*SF}},
 	{DRAW, {8*SF, 0}},
 	{STOP, {0,0}}
 };
 
 const struct packet_t tongue_full[]=
 {
-	{MOVE, {0*SF, 4*SF}},
+	{DRAW, {0* SF, -1 * SF}},
 	{DRAW, {15*SF, 0*SF}},
 	{DRAW, {1*SF, 1*SF}},
 	{DRAW, {-1*SF, 1*SF}},
@@ -52,7 +50,6 @@ const struct packet_t tongue_full[]=
 
 const struct packet_t tongue_full_line[]=
 {
-	{MOVE, {0*SF, 5*SF}},
 	{DRAW, {13*SF, 0}},
 	{STOP, {0,0}}
 };

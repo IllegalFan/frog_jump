@@ -13,6 +13,7 @@ struct monster{
 	enum state monster_state;
 	unsigned int dir_right;
 	unsigned int speed;
+	unsigned int cooldown;
 };
 
 void generate_monster(struct vector_t pos);

@@ -40,7 +40,7 @@ const struct packet_t vectors_bird_left2[]=
 
 const struct packet_t vectors_bird_right1[]=
 {
-	{MOVE, { -5 * SF, 4 * SF}},
+	{DRAW, { -5 * SF, -4 * SF}},
 	{DRAW, { 5 * SF, 5 * SF}},
 	{DRAW, { 0 * SF, 1 * SF}},
 	{DRAW, { -1 * SF, 2 * SF}},
@@ -58,7 +58,7 @@ const struct packet_t vectors_bird_right1[]=
 
 const struct packet_t vectors_bird_right2[]=
 {
-	{MOVE, { -5 * SF, 4 * SF}},
+	{DRAW, { -5 * SF, -4 * SF}},
 	{DRAW, { 5 * SF, 5 * SF}},
 	{DRAW, { 0 * SF, 1 * SF}},
 	{DRAW, { -1 * SF, 2 * SF}},
@@ -82,7 +82,8 @@ struct monster bird =
 	(void*) &vectors_bird_right1,
 	DEAD,
 	1,
-	1
+	1,
+	0
 };
 
 
@@ -102,16 +103,27 @@ void draw_bird(void)
 		Reset0Ref();
 		dp_VIA_t1_cnt_lo = 0x7f;
 		Moveto_d(bird.pos.y, bird.pos.x);
-		dp_VIA_t1_cnt_lo = 0x14;
+		dp_VIA_t1_cnt_lo = 0x30;
 		Draw_VLp((void*) bird.shape);
 	}
 }
 
 void move_monsters(int distance)
 {
-	if(bird.pos.y >= 127) bird.monster_state = ALIVE;
-	bird.pos.y -= distance;
-	
+	if(bird.cooldown == 0)
+	{
+		if(bird.pos.y <= -127)
+		{
+			 bird.monster_state = DEAD;
+			 bird.cooldown = Random();
+		}
+		bird.pos.y -= distance;
+	}
+	else
+	{
+		bird.cooldown--;
+		if(bird.cooldown == 0) bird.monster_state = ALIVE;
+	}
 }
 
 void handle_monsters(void)

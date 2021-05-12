@@ -27,7 +27,7 @@ int arrow_ypos = -127;
 struct game_t current_game = 
 {
 	.score = 0,
-	.difficulty = 1,
+	.difficulty = 4,
 	.running = 1,
 	.highscore = 0,
 	.alive = 0,
@@ -51,6 +51,8 @@ void game_options(void)
 
 void game_init(void)
 {
+	current_player.shape = (void*) &frog_up;
+	current_player.frog_tongue.state = INACTIVE;
 	current_game.alive = 1;
 	diff_animation = 0;
 	current_game.difficulty = 1;
@@ -63,7 +65,6 @@ void game_over(void)
 	if(current_game.score > current_game.highscore) current_game.highscore = current_game.score;
 	current_game.score = 0;
 	current_game.alive = 0;
-	current_player.shape = (void*) &frog_up;
 }
 
 void game_play(void)
@@ -87,6 +88,9 @@ void game_play(void)
 		draw_bird();
 		draw_difficulty();
 		print_long_unsigned_int_efficiently(current_game.score);
+		//with print: avg 26486; max 31366
+		//with improved print: avg 21827; max 25825
+		//without print: avg 18067; max 22767
 	}
 }
 
@@ -111,13 +115,17 @@ int game(void)
 
 void calculate_score(void)
 {
-	if(current_game.score_delay == 2)
+	if(current_game.score_delay == 4)
 	 {
 		 current_game.score++;
 		 if(current_game.score % 100 == 99)
 		 {
-			increase_diff();
-			diff_animation = 1;
+			if(current_game.difficulty < 4)
+			{
+				increase_diff();
+				current_game.difficulty++;
+				diff_animation = 1;
+			}
 		 }
 		 current_game.score_delay = 0;
 	 }
