@@ -11,6 +11,36 @@
 
 #define SF 20
 
+const struct packet_t explosion[] = 
+{
+	{DRAW, { 3 * SF, -2 * SF}},
+	{DRAW, { -2 * SF, -2 * SF}},
+	{DRAW, { 3 * SF, 1 * SF}},
+	{DRAW, { 1 * SF, -3 * SF}},
+	{DRAW, { 1 * SF, 3 * SF}},
+	{DRAW, { 3 * SF, -3 * SF}},
+	{DRAW, { -1 * SF, 4 * SF}},
+	{DRAW, { 3 * SF, 1 * SF}},
+	{DRAW, { -3 * SF, 1 * SF}},
+	{DRAW, { 2 * SF, 2 * SF}},
+	{DRAW, { -3 * SF, -1 * SF}},
+	{DRAW, { 2 * SF, 3 * SF}},
+	{DRAW, { -4 * SF, -3 * SF}},
+	{DRAW, { -3 * SF, 3 * SF}},
+	{DRAW, { 1 * SF, -4 * SF}},
+	{DRAW, { -3 * SF, 0 * SF}},
+	{STOP, { 0,0}},
+};
+
+const struct packet_t difficulty[] =
+{
+	{DRAW, { 2 * SF, 0 * SF}},
+	{DRAW, { 0 * SF, 2 * SF}},
+	{DRAW, { -2 * SF, 0 * SF}},
+	{DRAW, { 0 * SF, -2 * SF}},
+	{STOP, { 0,0}},
+};
+
 const struct packet_t arrow[] = 
 {
 	{DRAW, { 3 * SF, 0 * SF}},
@@ -38,7 +68,7 @@ void game_options(void)
 {
 	Wait_Recal();
 	Reset0Ref();
-	Print_Str_d(80 ,-80, "FROG JUMP\x80");
+	Print_Str_d(80 ,-60, "FROG JUMP\x80");
 	Print_Str_d(-50 , -100, "HS\x80");
 	print_long_unsigned_int(-50,20, current_game.highscore);
 	Print_Str_d(-80,-100, "PRESS 2 TO START\x80");
@@ -60,11 +90,11 @@ void game_init(void)
 	init_player();
 }
 
-void game_over(void)
+void game_over(unsigned int deathstate)
 {
 	if(current_game.score > current_game.highscore) current_game.highscore = current_game.score;
 	current_game.score = 0;
-	current_game.alive = 0;
+	current_game.alive = deathstate;
 }
 
 void game_play(void)
@@ -73,7 +103,7 @@ void game_play(void)
 	init_player();
 	struct vector_t pos = {100,0};
 	generate_monster(pos);
-	while(current_game.alive)
+	while(current_game.alive == 1)
 	{
 		DP_to_C8();
 		Init_Music_chk(current_music);
@@ -87,11 +117,13 @@ void game_play(void)
 		draw_platforms();
 		draw_bird();
 		draw_difficulty();
+		draw_difficulty_increase();
 		print_long_unsigned_int_efficiently(current_game.score);
 		//with print: avg 26486; max 31366
 		//with improved print: avg 21827; max 25825
 		//without print: avg 18067; max 22767
 	}
+	death_animation();
 }
 
 int game(void)
@@ -111,6 +143,54 @@ int game(void)
 		}*/
 	}
 	return 1;
+}
+
+void death_animation(void)
+{
+	int falling_y_pos = 127;
+	struct vector_t pos = {0,127};
+	generate_monster(pos);
+	unsigned int explosion = 0;
+	while(current_game.alive > 1)
+	{
+		DP_to_C8();
+		Init_Music_chk(current_music);
+		Wait_Recal();
+		Do_Sound();
+		Intensity_5F();
+		Print_Str_d(100 ,-60, "GAME OVER\x80");
+		if(current_game.alive == 2) //Death animation: Falling
+		{
+			death_by_falling(falling_y_pos);
+			if(falling_y_pos > -126) falling_y_pos-=2;
+		}
+		if(current_game.alive == 3) //Death animation: Bird
+		{
+			death_by_bird();
+			explosion = 1;
+		}
+	}
+	if (explosion) explosion_animation();
+}
+
+void explosion_animation(void)
+{
+	unsigned int explosion_size = 10;
+	int x_pos = current_player.position.x;
+	while(explosion_size < 50)
+	{
+		explosion_size++;
+		DP_to_C8();
+		Init_Music_chk(current_music);
+		Wait_Recal();
+		Do_Sound();
+		Intensity_5F();
+		Print_Str_d(100 ,-60, "GAME OVER\x80");
+		dp_VIA_t1_cnt_lo = 0x7f;
+		Moveto_d(-10, x_pos);
+		dp_VIA_t1_cnt_lo = explosion_size;
+		Draw_VLp((void*) &explosion);
+	}
 }
 
 void calculate_score(void)
@@ -133,6 +213,17 @@ void calculate_score(void)
 }
 
 void draw_difficulty(void)
+{
+	Reset0Ref();
+	Intensity_5F();
+	dp_VIA_t1_cnt_lo = 0x7f;
+	int y_pos = (int) current_game.difficulty  * 20 + 37;
+	Moveto_d(y_pos , 97);
+	dp_VIA_t1_cnt_lo = 0x10;
+	Draw_VLp((void*) &difficulty);	
+}
+
+void draw_difficulty_increase(void)
 {
 	//print_nonmovingprob();
 	if(diff_animation > 0 && diff_animation < 64)

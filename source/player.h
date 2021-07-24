@@ -27,6 +27,7 @@ struct player{
 
 extern struct player current_player;
 extern const struct packet_t frog_up[];
+extern const struct packet_t frog_down[];
 
 
 void init_player(void);
@@ -37,4 +38,6 @@ void handle_tongue(void);
 void move_player(void);
 void move_field(int distance);
 void increase_diff(void);
+void death_by_falling(int y);
+void death_by_bird(void);
 	

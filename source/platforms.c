@@ -202,9 +202,13 @@ void move_platforms(int x)
 				platforms[i].scale_factor = current_scale_factor;
 				platforms[i].position.y -= x;
 				int new_pos = (int) Random();
-				if(new_pos > 100)
+				if(new_pos > 127 - (int)(platforms[i].scale_factor/2))
 				{
-					new_pos &= (int)0b11011111;
+					new_pos -= (int)platforms[i].scale_factor / 2;
+				}
+				else if(new_pos < -128 + (int)(platforms[i].scale_factor/2))
+				{
+					new_pos += (int)platforms[i].scale_factor/2;
 				}
 				platforms[i].position.x = new_pos;
 			}

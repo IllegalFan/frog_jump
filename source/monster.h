@@ -12,7 +12,6 @@ struct monster{
 	struct  packet_t* shape;
 	enum state monster_state;
 	unsigned int dir_right;
-	unsigned int speed;
 	unsigned int cooldown;
 };
 
@@ -21,3 +20,4 @@ void draw_bird(void);
 void move_monsters(int distance);
 void handle_monsters(void);
 unsigned int check_monster_collision(struct vector_t* position, unsigned int ry, unsigned int rx);
+unsigned int compare_x_pos(int x);

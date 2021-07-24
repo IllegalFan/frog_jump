@@ -62,13 +62,14 @@ void tongue_lash(struct tongue* frog_tongue, int y, int x)
 	{
 		case INACTIVE:
 			Read_Btns();
-			if(button_1_1_held()) frog_tongue->state = ONETHIRD;
+			if(button_1_4_held())
+			{
+				frog_tongue->state = ONETHIRD;
+				frog_tongue->shape[0] = (void*) tongue_onethird;
+				frog_tongue->shape[1] = (void*) tongue_onethird_line;
+			}
 			break;
 		case ONETHIRD:
-			frog_tongue->shape[0] = (void*) tongue_onethird;
-			frog_tongue->shape[1] = (void*) tongue_onethird_line;
-			struct vector_t pos1 = {frog_tongue->position.y + 10, frog_tongue->position.x};
-			check_monster_collision(&pos1, 10, 10);
 			if(frog_tongue->cnt < 10)
 			{
 				frog_tongue->cnt += 1;
@@ -78,6 +79,8 @@ void tongue_lash(struct tongue* frog_tongue, int y, int x)
 				frog_tongue->state = TWOTHIRD;
 				frog_tongue->cnt = 0;
 			}
+			struct vector_t pos1 = {frog_tongue->position.y + 10, frog_tongue->position.x};
+			check_monster_collision(&pos1, 10, 10);
 			break;
 		case TWOTHIRD:
 			frog_tongue->shape[0] = (void*) tongue_twothird;

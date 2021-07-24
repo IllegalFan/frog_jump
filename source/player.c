@@ -198,7 +198,7 @@ void handle_jump(void)
 	switch(current_player.jmp.js)
 	{
 		case UP_FAST:
-			if(monster_collision == 1)game_over();
+			if(monster_collision == 1)game_over(3);
 			if(current_player.jmp.js_counter < 20)
 			{
 				if(current_player.position.y > MAX_PLAYER_HEIGHT)
@@ -218,7 +218,7 @@ void handle_jump(void)
 			}
 			break;
 		case UP_SLOW:
-			if(monster_collision == 1 )game_over();
+			if(monster_collision == 1 )game_over(3);
 			if(current_player.jmp.js_counter < 10)
 			{
 				if(current_player.position.y > MAX_PLAYER_HEIGHT)
@@ -254,7 +254,7 @@ void handle_jump(void)
 				current_player.jmp.js = DOWN_FAST;
 				current_player.jmp.js_counter = 0;
 			}
-			if(current_player.position.y <= -127) game_over();
+			if(current_player.position.y <= -127) game_over(0);
 			break;
 		case DOWN_FAST:
 			if(platform_collision || monster_collision == 2)
@@ -265,7 +265,7 @@ void handle_jump(void)
 				current_player.jmp.js_counter = 0;
 			}
 			else current_player.position.y -= 2;
-			if(current_player.position.y <= -127) game_over();	
+			if(current_player.position.y <= -127) game_over(2);	
 			break;	
 		default:
 			break;
@@ -307,4 +307,44 @@ void move_field(int distance)
 	move_platforms(distance);
 	move_monsters(distance);
 }
+
+void death_by_falling(int y)
+{
+	static unsigned int scale_factor = 0x18;
+	dp_VIA_t1_cnt_lo = 0x7f;
+	Moveto_d(y, current_player.position.x);
+	if(y > -126)
+	{		
+		dp_VIA_t1_cnt_lo = scale_factor;
+	}
+	else
+	{
+		if(scale_factor > 4)
+		{
+			dp_VIA_t1_cnt_lo = scale_factor--;
+		}
+		else
+		{
+			dp_VIA_t1_cnt_lo = scale_factor;
+			current_game.alive = 0;
+			scale_factor = 0x18;
+		}
+	}
+	Draw_VLp((void*) &frog_down);
+}
+
+void death_by_bird()
+{
+	dp_VIA_t1_cnt_lo = 0x7f;
+	Moveto_d(-20, current_player.position.x);
+	dp_VIA_t1_cnt_lo = 0x18;
+	Draw_VLp((void*) &frog_up);
+	handle_monsters();
+	draw_bird();
+	if(compare_x_pos(current_player.position.x) == 0) // bird lower than player;
+	{
+		current_game.alive = 0;
+	}
+}
+
 

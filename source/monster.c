@@ -40,7 +40,7 @@ const struct packet_t vectors_bird_left2[]=
 
 const struct packet_t vectors_bird_right1[]=
 {
-	{DRAW, { -5 * SF, -4 * SF}},
+	{MOVE, { -5 * SF, -4 * SF}},
 	{DRAW, { 5 * SF, 5 * SF}},
 	{DRAW, { 0 * SF, 1 * SF}},
 	{DRAW, { -1 * SF, 2 * SF}},
@@ -58,7 +58,7 @@ const struct packet_t vectors_bird_right1[]=
 
 const struct packet_t vectors_bird_right2[]=
 {
-	{DRAW, { -5 * SF, -4 * SF}},
+	{MOVE, { -5 * SF, -4 * SF}},
 	{DRAW, { 5 * SF, 5 * SF}},
 	{DRAW, { 0 * SF, 1 * SF}},
 	{DRAW, { -1 * SF, 2 * SF}},
@@ -82,7 +82,6 @@ struct monster bird =
 	(void*) &vectors_bird_right1,
 	DEAD,
 	1,
-	1,
 	0
 };
 
@@ -103,7 +102,7 @@ void draw_bird(void)
 		Reset0Ref();
 		dp_VIA_t1_cnt_lo = 0x7f;
 		Moveto_d(bird.pos.y, bird.pos.x);
-		dp_VIA_t1_cnt_lo = 0x30;
+		dp_VIA_t1_cnt_lo = 0x14;
 		Draw_VLp((void*) bird.shape);
 	}
 }
@@ -132,7 +131,7 @@ void handle_monsters(void)
 	{
 		if(bird.pos.x < 100)
 		{
-			 bird.pos.x+=(int)bird.speed;
+			 bird.pos.x+= 1;
 			 if((unsigned int)bird.pos.x % 40 > 19) bird.shape = (void*) vectors_bird_right1;
 			 else bird.shape = (void*) vectors_bird_right2;
 		}
@@ -146,7 +145,7 @@ void handle_monsters(void)
 	{
 		if(bird.pos.x > -125)
 		{
-			 bird.pos.x-=(int)bird.speed;
+			 bird.pos.x-=1;
 			 if((unsigned int)bird.pos.x % 40 > 19) bird.shape = (void*) vectors_bird_left1;
 			 else bird.shape = (void*) vectors_bird_left2;
 		}
@@ -198,4 +197,10 @@ unsigned int check_monster_collision(struct vector_t* position, unsigned int ry,
 		else return 0;
 	}
 	else return 0;
+}
+
+unsigned int compare_x_pos(int x)
+{
+	if(x > bird.pos.x) return 0;
+	else return 1;
 }
